@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.dapascript.memogram.R
 import com.dapascript.memogram.databinding.FragmentOnBoardingBinding
 
 class OnBoardingFragment : Fragment() {
@@ -44,5 +46,15 @@ class OnBoardingFragment : Fragment() {
         AnimatorSet().apply {
             playSequentially(desc, together)
         }.start()
+
+        binding.apply {
+            btnLogin.setOnClickListener {
+                findNavController().navigate(R.id.action_onBoardingFragment_to_loginFragment)
+            }
+
+            btnSignup.setOnClickListener {
+                findNavController().navigate(R.id.action_onBoardingFragment_to_registerFragment)
+            }
+        }
     }
 }

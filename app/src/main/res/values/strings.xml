@@ -4,4 +4,8 @@
     <string name="desc_on_board">Abadikan setiap momen yang berharga dan terbaikmu di sini</string>
     <string name="login">Masuk</string>
     <string name="signup">Daftar</string>
+    <string name="email">E-mail</string>
+    <string name="password">Kata sandi</string>
+    <string name="accept">Lanjutkan</string>
+    <string name="name">Nama</string>
 </resources>
