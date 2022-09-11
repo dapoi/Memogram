@@ -3,7 +3,16 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Projek/Memogram/app/src/main/res/drawable/bg_button_login.xml" value="0.12" />
+        <entry key="..\:/Projek/Memogram/app/src/main/res/drawable/bg_button_login_default.xml" value="0.1365" />
+        <entry key="..\:/Projek/Memogram/app/src/main/res/drawable/bg_button_login_selected.xml" value="0.1365" />
+        <entry key="..\:/Projek/Memogram/app/src/main/res/drawable/bg_button_signup.xml" value="0.1365" />
+        <entry key="..\:/Projek/Memogram/app/src/main/res/drawable/bg_button_signup_default.xml" value="0.1365" />
+        <entry key="..\:/Projek/Memogram/app/src/main/res/drawable/bg_button_signup_selected.xml" value="0.1365" />
+        <entry key="..\:/Projek/Memogram/app/src/main/res/layout/activity_auth.xml" value="0.2" />
         <entry key="..\:/Projek/Memogram/app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="..\:/Projek/Memogram/app/src/main/res/layout/fragment_on_boarding.xml" value="0.22" />
+        <entry key="..\:/Projek/Memogram/app/src/main/res/layout/fragment_splash_screen.xml" value="0.2" />
       </map>
     </option>
   </component>

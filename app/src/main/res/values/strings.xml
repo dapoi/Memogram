@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Memogram</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="desc_on_board">Abadikan setiap momen yang berharga dan terbaikmu di sini</string>
+    <string name="login">Masuk</string>
+    <string name="signup">Daftar</string>
 </resources>
