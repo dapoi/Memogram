@@ -15,6 +15,7 @@ import com.dapascript.memogram.R
 import com.dapascript.memogram.databinding.FragmentRegisterBinding
 import com.dapascript.memogram.presentation.viewmodel.AuthViewModel
 import com.dapascript.memogram.utils.Resource
+import com.dapascript.memogram.utils.getSnackBar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -81,7 +82,7 @@ class RegisterFragment : Fragment() {
                     showControl(false)
                     AlertDialog.Builder(requireContext())
                         .setTitle("Berhasil")
-                        .setMessage("Akun berhasil dibuat, silahkan login")
+                        .setMessage("Pendaftaran berhasil, silahkan login")
                         .setPositiveButton("OK") { dialog, _ ->
                             dialog.dismiss()
                             findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
@@ -90,14 +91,27 @@ class RegisterFragment : Fragment() {
                 }
                 is Resource.Error -> {
                     showControl(false)
-                    AlertDialog.Builder(requireContext())
-                        .setTitle("Gagal")
-                        .setMessage(it.message)
-                        .setPositiveButton("OK", null)
-                        .create()
-                        .show()
+                    showSnackBar(it.message!!)
                 }
             }
+        }
+    }
+
+    private fun showSnackBar(message: String) {
+        if (message == "HTTP 400 Bad Request") {
+            getSnackBar(
+                requireActivity(),
+                binding.root,
+                "Email sudah terdaftar",
+                binding.btnSignup
+            )
+        } else {
+            getSnackBar(
+                requireActivity(),
+                binding.root,
+                "Terjadi kesalahan, silahkan coba lagi",
+                binding.btnSignup
+            )
         }
     }
 

@@ -9,13 +9,19 @@
         <entry key="..\:/Projek/Memogram/app/src/main/res/drawable/bg_button_signup.xml" value="0.1365" />
         <entry key="..\:/Projek/Memogram/app/src/main/res/drawable/bg_button_signup_default.xml" value="0.1365" />
         <entry key="..\:/Projek/Memogram/app/src/main/res/drawable/bg_button_signup_selected.xml" value="0.1365" />
+        <entry key="..\:/Projek/Memogram/app/src/main/res/drawable/ic_add_selector.xml" value="0.1365" />
         <entry key="..\:/Projek/Memogram/app/src/main/res/drawable/ic_back.xml" value="0.1365" />
+        <entry key="..\:/Projek/Memogram/app/src/main/res/drawable/ic_feed_selector.xml" value="0.1365" />
+        <entry key="..\:/Projek/Memogram/app/src/main/res/drawable/ic_profile_selector.xml" value="0.1365" />
         <entry key="..\:/Projek/Memogram/app/src/main/res/layout/activity_auth.xml" value="0.2" />
         <entry key="..\:/Projek/Memogram/app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="..\:/Projek/Memogram/app/src/main/res/layout/fragment_account.xml" value="0.19635416666666666" />
+        <entry key="..\:/Projek/Memogram/app/src/main/res/layout/fragment_feed.xml" value="0.19635416666666666" />
         <entry key="..\:/Projek/Memogram/app/src/main/res/layout/fragment_login.xml" value="0.14666666666666667" />
         <entry key="..\:/Projek/Memogram/app/src/main/res/layout/fragment_on_boarding.xml" value="0.22" />
         <entry key="..\:/Projek/Memogram/app/src/main/res/layout/fragment_register.xml" value="0.2" />
         <entry key="..\:/Projek/Memogram/app/src/main/res/layout/fragment_splash_screen.xml" value="0.2" />
+        <entry key="..\:/Projek/Memogram/app/src/main/res/menu/bottom_menu.xml" value="0.2" />
       </map>
     </option>
   </component>

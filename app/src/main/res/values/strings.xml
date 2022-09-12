@@ -8,4 +8,8 @@
     <string name="password">Kata sandi</string>
     <string name="accept">Lanjutkan</string>
     <string name="name">Nama</string>
+    <string name="feed">Beranda</string>
+    <string name="post">Posting</string>
+    <string name="profile">Profil</string>
+    <string name="logout">Keluar</string>
 </resources>

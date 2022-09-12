@@ -1,11 +1,13 @@
 package com.dapascript.memogram.presentation.view.auth
 
+import android.content.Context.INPUT_METHOD_SERVICE
+import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -13,8 +15,10 @@ import androidx.navigation.fragment.findNavController
 import com.dapascript.memogram.data.preference.UserPreference
 import com.dapascript.memogram.data.source.remote.model.LoginResult
 import com.dapascript.memogram.databinding.FragmentLoginBinding
+import com.dapascript.memogram.presentation.view.MainActivity
 import com.dapascript.memogram.presentation.viewmodel.AuthViewModel
 import com.dapascript.memogram.utils.Resource
+import com.dapascript.memogram.utils.getSnackBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -45,6 +49,10 @@ class LoginFragment : Fragment() {
             }
 
             btnLogin.setOnClickListener {
+                val imm = requireActivity().getSystemService(
+                    INPUT_METHOD_SERVICE
+                ) as InputMethodManager
+                imm.hideSoftInputFromWindow(view.windowToken, 0)
                 showControl(false)
                 val email = etEmail.text.toString()
                 val password = etPassword.text.toString()
@@ -75,33 +83,49 @@ class LoginFragment : Fragment() {
                 is Resource.Loading -> showControl(true)
                 is Resource.Success -> {
                     showControl(false)
-                    saveUserData(it.data?.loginResult, email)
-                    AlertDialog.Builder(requireContext())
-                        .setTitle("Berhasil")
-                        .setMessage("Selamat datang kembali")
-                        .setPositiveButton("OK") { dialog, _ ->
-                            dialog.dismiss()
-                        }
-                        .show()
+                    saveUserData(it.data!!.loginResult, email)
+                    Intent(requireContext(), MainActivity::class.java).also { intent ->
+                        startActivity(intent)
+                        requireActivity().finish()
+                    }
                 }
                 is Resource.Error -> {
                     showControl(false)
-                    AlertDialog.Builder(requireContext())
-                        .setTitle("Gagal")
-                        .setMessage(it.message)
-                        .setPositiveButton("OK") { dialog, _ ->
-                            dialog.dismiss()
-                        }
-                        .show()
+                    showSnackBar(it.message!!)
                 }
             }
         }
     }
 
-    private fun saveUserData(loginResult: LoginResult?, email: String) {
-        lifecycleScope.launch {
-            userPreference.saveUserName(loginResult?.name!!)
-            userPreference.saveUserEmail(email)
+    private fun showSnackBar(message: String) {
+        if (message == "HTTP 401 Unauthorized") {
+            getSnackBar(
+                requireActivity(),
+                binding.root,
+                "Email atau kata sandi salah",
+                binding.btnLogin
+            )
+        } else {
+            getSnackBar(
+                requireActivity(),
+                binding.root,
+                "Terjadi kesalahan",
+                binding.btnLogin
+            )
+        }
+    }
+
+    private fun saveUserData(loginResult: LoginResult, email: String) {
+        val token = loginResult.token
+        val userName = loginResult.name
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            userPreference.apply {
+                saveUserName(userName)
+                saveUserEmail(email)
+                saveUserToken(token)
+                saveIsLoggedIn(true)
+            }
         }
     }
 
