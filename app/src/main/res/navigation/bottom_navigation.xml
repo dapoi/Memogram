@@ -20,7 +20,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_upload"
-        android:name="com.dapascript.memogram.presentation.ui.camera.UploadStoryFragment"
+        android:name="com.dapascript.memogram.presentation.ui.story.UploadStoryFragment"
         android:label="fragment_upload_story"
         tools:layout="@layout/fragment_upload_story" />
     <fragment

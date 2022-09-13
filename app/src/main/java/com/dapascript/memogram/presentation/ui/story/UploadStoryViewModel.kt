@@ -1,4 +1,4 @@
-package com.dapascript.memogram.presentation.ui.camera
+package com.dapascript.memogram.presentation.ui.story
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel

@@ -1,4 +1,4 @@
-package com.dapascript.memogram.presentation.ui.camera
+package com.dapascript.memogram.presentation.ui.story
 
 import android.content.Intent
 import android.os.Build
@@ -14,7 +14,7 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import com.dapascript.memogram.databinding.ActivityCameraBinding
-import com.dapascript.memogram.presentation.ui.camera.UploadStoryFragment.Companion.CAMERA_X_RESULT
+import com.dapascript.memogram.presentation.ui.story.UploadStoryFragment.Companion.CAMERA_X_RESULT
 import com.dapascript.memogram.utils.createFile
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors

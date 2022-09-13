@@ -1,4 +1,4 @@
-package com.dapascript.memogram.presentation.ui.camera
+package com.dapascript.memogram.presentation.ui.story
 
 import android.Manifest
 import android.app.Activity.RESULT_OK
@@ -20,6 +20,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.dapascript.memogram.R
 import com.dapascript.memogram.data.preference.UserPreference
 import com.dapascript.memogram.databinding.FragmentUploadStoryBinding
@@ -192,6 +193,7 @@ class UploadStoryFragment : Fragment() {
                                     "Berhasil upload story",
                                     Toast.LENGTH_SHORT
                                 ).show()
+                                findNavController().navigate(R.id.nav_feed)
                             }
                             is Resource.Error -> {
                                 uploadState(false)
