@@ -1,4 +1,4 @@
-package com.dapascript.memogram.presentation.view.auth
+package com.dapascript.memogram.presentation.ui.auth
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

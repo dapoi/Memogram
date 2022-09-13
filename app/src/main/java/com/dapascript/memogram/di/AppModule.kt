@@ -1,9 +1,11 @@
 package com.dapascript.memogram.di
 
 import android.content.Context
+import androidx.room.Room
 import com.dapascript.memogram.data.preference.UserPreference
 import com.dapascript.memogram.data.source.UserRepository
 import com.dapascript.memogram.data.source.UserRepositoryImpl
+import com.dapascript.memogram.data.source.local.db.FeedDatabase
 import com.dapascript.memogram.data.source.remote.network.ApiService
 import dagger.Module
 import dagger.Provides
@@ -43,7 +45,17 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideDatabase(@ApplicationContext context: Context): FeedDatabase =
+        Room.databaseBuilder(
+            context,
+            FeedDatabase::class.java,
+            "memogram.db"
+        ).build()
+
+    @Provides
+    @Singleton
     fun provideRepository(
         apiService: ApiService,
-    ): UserRepository = UserRepositoryImpl(apiService)
+        feedDB: FeedDatabase
+    ): UserRepository = UserRepositoryImpl(apiService, feedDB)
 }

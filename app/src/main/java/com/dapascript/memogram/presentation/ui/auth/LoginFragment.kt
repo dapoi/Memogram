@@ -1,4 +1,4 @@
-package com.dapascript.memogram.presentation.view.auth
+package com.dapascript.memogram.presentation.ui.auth
 
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.Intent
@@ -15,8 +15,7 @@ import androidx.navigation.fragment.findNavController
 import com.dapascript.memogram.data.preference.UserPreference
 import com.dapascript.memogram.data.source.remote.model.LoginResult
 import com.dapascript.memogram.databinding.FragmentLoginBinding
-import com.dapascript.memogram.presentation.view.MainActivity
-import com.dapascript.memogram.presentation.viewmodel.AuthViewModel
+import com.dapascript.memogram.presentation.ui.MainActivity
 import com.dapascript.memogram.utils.Resource
 import com.dapascript.memogram.utils.getSnackBar
 import dagger.hilt.android.AndroidEntryPoint

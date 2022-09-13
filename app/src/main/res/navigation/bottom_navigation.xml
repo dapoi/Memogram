@@ -7,17 +7,17 @@
 
     <fragment
         android:id="@+id/nav_feed"
-        android:name="com.dapascript.memogram.presentation.view.feed.FeedFragment"
+        android:name="com.dapascript.memogram.presentation.ui.feed.FeedFragment"
         android:label="fragment_feed"
         tools:layout="@layout/fragment_feed" />
     <fragment
-        android:id="@+id/nav_camera"
-        android:name="com.dapascript.memogram.presentation.view.camera.CameraFragment"
-        android:label="fragment_camera"
-        tools:layout="@layout/fragment_camera" />
+        android:id="@+id/nav_upload"
+        android:name="com.dapascript.memogram.presentation.ui.camera.UploadStoryFragment"
+        android:label="fragment_upload_story"
+        tools:layout="@layout/fragment_upload_story" />
     <fragment
         android:id="@+id/nav_account"
-        android:name="com.dapascript.memogram.presentation.view.account.AccountFragment"
+        android:name="com.dapascript.memogram.presentation.ui.account.AccountFragment"
         android:label="fragment_account"
         tools:layout="@layout/fragment_account">
         <action
@@ -32,7 +32,7 @@
     </fragment>
     <activity
         android:id="@+id/authActivity"
-        android:name="com.dapascript.memogram.presentation.view.auth.AuthActivity"
+        android:name="com.dapascript.memogram.presentation.ui.auth.AuthActivity"
         android:label="activity_auth"
         tools:layout="@layout/activity_auth" />
 </navigation>

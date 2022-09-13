@@ -7,7 +7,10 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.asLiveData
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -26,9 +29,9 @@ class UserPreference @Inject constructor(@ApplicationContext context: Context) {
     /**
      * User token
      */
-    val userToken = dataStore.data.map { preferences ->
+    val userToken: LiveData<String> = dataStore.data.map { preferences ->
         preferences[USER_TOKEN] ?: ""
-    }
+    }.distinctUntilChanged().asLiveData()
 
     suspend fun saveUserToken(token: String) {
         dataStore.edit { preferences ->
@@ -39,9 +42,9 @@ class UserPreference @Inject constructor(@ApplicationContext context: Context) {
     /**
      * User name
      */
-    val userName = dataStore.data.map { preferences ->
+    val userName: LiveData<String> = dataStore.data.map { preferences ->
         preferences[USER_NAME] ?: ""
-    }
+    }.distinctUntilChanged().asLiveData()
 
     suspend fun saveUserName(name: String) {
         dataStore.edit { preferences ->

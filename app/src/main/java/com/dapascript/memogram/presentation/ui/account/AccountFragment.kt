@@ -1,11 +1,10 @@
-package com.dapascript.memogram.presentation.view.account
+package com.dapascript.memogram.presentation.ui.account
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.dapascript.memogram.R
@@ -32,7 +31,7 @@ class AccountFragment : Fragment() {
 
         userPreference = UserPreference(requireContext())
 
-        val token = userPreference.userToken.asLiveData()
+        val token = userPreference.userToken
 
         binding.apply {
             token.observe(viewLifecycleOwner) {

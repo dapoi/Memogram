@@ -1,4 +1,4 @@
-package com.dapascript.memogram.presentation.view.auth
+package com.dapascript.memogram.presentation.ui.auth
 
 import android.annotation.SuppressLint
 import android.os.Bundle

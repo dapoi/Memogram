@@ -1,4 +1,4 @@
-package com.dapascript.memogram.presentation.viewmodel
+package com.dapascript.memogram.presentation.ui.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData

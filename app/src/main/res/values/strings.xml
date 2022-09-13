@@ -9,7 +9,14 @@
     <string name="accept">Lanjutkan</string>
     <string name="name">Nama</string>
     <string name="feed">Beranda</string>
-    <string name="post">Posting</string>
+    <string name="post">Unggah</string>
     <string name="profile">Profil</string>
     <string name="logout">Keluar</string>
+    <string name="try_again">Coba lagi</string>
+    <string name="take_moment">Abadikan momen-momen terbaikmu!</string>
+    <string name="retry">Maaf, terjadi kesalahan.</string>
+    <string name="desc">Deskripsi</string>
+    <string name="camera">Kamera</string>
+    <string name="gallery">Galeri</string>
+    <string name="new_post">Postingan Baru</string>
 </resources>
