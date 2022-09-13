@@ -6,26 +6,65 @@
     android:layout_height="match_parent"
     tools:context=".presentation.ui.account.AccountFragment">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@android:color/transparent"
+        app:contentInsetStart="@dimen/cardview_compat_inset_shadow"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_semibold"
+            android:text="@string/profile"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+    </androidx.appcompat.widget.Toolbar>
+
     <TextView
-        android:id="@+id/tv_token"
-        android:layout_width="wrap_content"
+        android:id="@+id/tv_name"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/poppins_semibold"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Token" />
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        tools:text="Nama" />
+
+    <TextView
+        android:id="@+id/tv_email"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/poppins_medium"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_name"
+        tools:text="Email" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:backgroundTint="@color/primary_green"
         android:text="@string/logout"
         android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="@+id/tv_token"
-        app:layout_constraintStart_toStartOf="@+id/tv_token"
-        app:layout_constraintTop_toBottomOf="@+id/tv_token" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_email" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

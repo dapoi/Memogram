@@ -31,11 +31,15 @@ class AccountFragment : Fragment() {
 
         userPreference = UserPreference(requireContext())
 
-        val token = userPreference.userToken
+        val name = userPreference.userName
+        val email = userPreference.userEmail
 
         binding.apply {
-            token.observe(viewLifecycleOwner) {
-                tvToken.text = it
+            name.observe(viewLifecycleOwner) {
+                tvName.text = it
+            }
+            email.observe(viewLifecycleOwner) {
+                tvEmail.text = it
             }
             btnLogout.setOnClickListener {
                 viewLifecycleOwner.lifecycleScope.launch {
