@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import com.dapascript.memogram.R
 import com.google.android.material.snackbar.Snackbar
 import java.io.*
+import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -122,4 +123,25 @@ fun reduceFileImage(file: File): File {
     bitmap.compress(Bitmap.CompressFormat.JPEG, compressQuality, FileOutputStream(file))
 
     return file
+}
+
+fun formatDate(date: String): String {
+    val currentFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+    val targetFormat = "dd MMM yyyy | HH:mm"
+    val timeZone = "GMT"
+    val id = Locale("in", "ID")
+    val currentDateFormat: DateFormat = SimpleDateFormat(currentFormat, id)
+    currentDateFormat.timeZone = TimeZone.getTimeZone(timeZone)
+    val targetDateFormat: DateFormat = SimpleDateFormat(targetFormat, id)
+    var targetDate: String? = null
+
+    try {
+        val currentDate = currentDateFormat.parse(date)
+        if (currentDate != null) {
+            targetDate = targetDateFormat.format(currentDate)
+        }
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+    return targetDate.toString()
 }

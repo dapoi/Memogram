@@ -10,6 +10,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.dapascript.memogram.data.source.local.model.FeedEntity
 import com.dapascript.memogram.databinding.ItemListFeedBinding
+import com.dapascript.memogram.utils.formatDate
 import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.ShimmerDrawable
 import com.iamageo.library.AnotherReadMore
@@ -20,6 +21,8 @@ import java.util.*
 class FeedAdapter(
     context: Context
 ) : PagingDataAdapter<FeedEntity, FeedAdapter.FeedViewHolder>(DIFF_UTIL) {
+
+    var onClick: ((FeedEntity) -> Unit)? = null
 
     private val readMore = AnotherReadMore.Builder(context)
         .textLength(50, AnotherReadMore.TYPE_CHARACTER)
@@ -55,6 +58,12 @@ class FeedAdapter(
                 tvDate.text = formatDate(feedEntity.date)
             }
         }
+
+        init {
+            binding.root.setOnClickListener {
+                getItem(bindingAdapterPosition)?.let { data -> onClick?.invoke(data) }
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedViewHolder {
@@ -71,27 +80,6 @@ class FeedAdapter(
         if (getItem(position) != null) {
             holder.bind(getItem(position)!!)
         }
-    }
-
-    private fun formatDate(date: String): String {
-        val currentFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-        val targetFormat = "dd MMM yyyy | HH:mm"
-        val timeZone = "GMT"
-        val id = Locale("in", "ID")
-        val currentDateFormat: DateFormat = SimpleDateFormat(currentFormat, id)
-        currentDateFormat.timeZone = TimeZone.getTimeZone(timeZone)
-        val targetDateFormat: DateFormat = SimpleDateFormat(targetFormat, id)
-        var targetDate: String? = null
-
-        try {
-            val currentDate = currentDateFormat.parse(date)
-            if (currentDate != null) {
-                targetDate = targetDateFormat.format(currentDate)
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return targetDate.toString()
     }
 
     companion object {

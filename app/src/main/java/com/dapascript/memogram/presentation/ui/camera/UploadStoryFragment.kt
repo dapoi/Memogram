@@ -27,6 +27,8 @@ import com.dapascript.memogram.utils.Resource
 import com.dapascript.memogram.utils.reduceFileImage
 import com.dapascript.memogram.utils.rotateBitmap
 import com.dapascript.memogram.utils.uriToFile
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -71,6 +73,7 @@ class UploadStoryFragment : Fragment() {
             val file = uriToFile(uri, requireContext())
             getFile = file
 
+            binding.btnUpload.isEnabled = true
             binding.ivCameraPlaceholder.setImageURI(uri)
         }
     }
@@ -138,14 +141,31 @@ class UploadStoryFragment : Fragment() {
                     uploadState(true)
                     uploadStory(desc)
                 } else {
-                    Toast.makeText(
-                        requireContext(),
-                        "Deskripsi tidak boleh kosong",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    showSnackbar()
                 }
             }
         }
+    }
+
+    private fun showSnackbar() {
+        val snackBar = Snackbar.make(
+            binding.root,
+            "Deskripsi tidak boleh kosong.",
+            Snackbar.LENGTH_LONG
+        ).apply {
+            val bottom = view.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+            anchorView = bottom
+            setBackgroundTint(
+                ContextCompat.getColor(
+                    context,
+                    R.color.red
+                )
+            )
+        }
+        val layoutParams = snackBar.view.layoutParams as ViewGroup.MarginLayoutParams
+        layoutParams.setMargins(60, 0, 60, 200)
+        snackBar.view.layoutParams = layoutParams
+        snackBar.show()
     }
 
     private fun uploadStory(desc: String) {

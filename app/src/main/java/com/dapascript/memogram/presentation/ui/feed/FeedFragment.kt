@@ -9,8 +9,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.dapascript.memogram.R
 import com.dapascript.memogram.data.preference.UserPreference
 import com.dapascript.memogram.databinding.FragmentFeedBinding
 import com.dapascript.memogram.presentation.adapter.FeedAdapter
@@ -67,6 +69,15 @@ class FeedFragment : Fragment() {
 
     private fun setAdapter() {
         feedAdapter = FeedAdapter(requireActivity())
+        feedAdapter.onClick = {
+            val data = Bundle().apply {
+                putString("photo", it.image)
+                putString("name", it.name)
+                putString("description", it.description)
+                putString("date", it.date)
+            }
+            findNavController().navigate(R.id.action_nav_feed_to_detail_feed_fragment, data)
+        }
         binding.rvFeed.apply {
             adapter = feedAdapter.withLoadStateFooter(
                 footer = LoadPagingAdapter { feedAdapter.retry() }

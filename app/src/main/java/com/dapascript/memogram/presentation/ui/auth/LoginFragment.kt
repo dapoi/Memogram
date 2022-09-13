@@ -3,7 +3,6 @@ package com.dapascript.memogram.presentation.ui.auth
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.Intent
 import android.os.Bundle
-import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -56,22 +55,7 @@ class LoginFragment : Fragment() {
                 val email = etEmail.text.toString()
                 val password = etPassword.text.toString()
 
-                when {
-                    email.isEmpty() -> {
-                        tilEmail.error = "Email harus diisi"
-                    }
-                    !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
-                        tilEmail.error = "Email tidak valid"
-                    }
-                    password.isEmpty() || password.length < 6 -> {
-                        tilPassword.error = "Kata sandi minimal 6 karakter"
-                    }
-                    else -> {
-                        tilEmail.error = null
-                        tilPassword.error = null
-                        loginUser(email, password)
-                    }
-                }
+                loginUser(email, password)
             }
         }
     }
