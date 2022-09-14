@@ -1,6 +1,5 @@
 package com.dapascript.memogram.presentation.ui.auth
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -14,11 +13,12 @@ import com.dapascript.memogram.R
 import com.dapascript.memogram.data.preference.UserPreference
 import com.dapascript.memogram.databinding.FragmentSplashScreenBinding
 
-@SuppressLint("CustomSplashScreen")
 class SplashScreenFragment : Fragment() {
 
     private lateinit var binding: FragmentSplashScreenBinding
     private lateinit var userPreference: UserPreference
+
+    private val duration = 3500L
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,6 +26,11 @@ class SplashScreenFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSplashScreenBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         userPreference = UserPreference(requireContext())
         val isLoggedIn = userPreference.isLoggedIn.asLiveData()
@@ -39,8 +44,6 @@ class SplashScreenFragment : Fragment() {
                     findNavController().navigate(R.id.action_splashScreenFragment_to_onBoardingFragment)
                 }
             }
-        }, 3500)
-
-        return binding.root
+        }, duration)
     }
 }
