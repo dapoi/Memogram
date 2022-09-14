@@ -47,5 +47,9 @@
         android:id="@+id/detail_feed_fragment"
         android:name="com.dapascript.memogram.presentation.ui.feed.DetailFeedFragment"
         android:label="fragment_detail_feed"
-        tools:layout="@layout/fragment_detail_feed" />
+        tools:layout="@layout/fragment_detail_feed">
+        <argument
+            android:name="entity"
+            app:argType="com.dapascript.memogram.data.source.local.model.FeedEntity" />
+    </fragment>
 </navigation>

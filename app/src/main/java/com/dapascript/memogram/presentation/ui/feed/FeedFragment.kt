@@ -70,13 +70,13 @@ class FeedFragment : Fragment() {
     private fun setAdapter() {
         feedAdapter = FeedAdapter(requireActivity())
         feedAdapter.onClick = {
-            val data = Bundle().apply {
-                putString("photo", it.image)
-                putString("name", it.name)
-                putString("description", it.description)
-                putString("date", it.date)
-            }
-            findNavController().navigate(R.id.action_nav_feed_to_detail_feed_fragment, data)
+            val entity = it
+            findNavController().navigate(
+                R.id.action_nav_feed_to_detail_feed_fragment,
+                Bundle().apply {
+                    putParcelable("feedEntity", entity)
+                }
+            )
         }
         binding.rvFeed.apply {
             adapter = feedAdapter.withLoadStateFooter(

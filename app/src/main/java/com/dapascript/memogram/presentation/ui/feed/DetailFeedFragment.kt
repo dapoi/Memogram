@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.dapascript.memogram.data.source.local.model.FeedEntity
 import com.dapascript.memogram.databinding.FragmentDetailFeedBinding
 import com.dapascript.memogram.presentation.ui.MainActivity
 import com.dapascript.memogram.utils.formatDate
@@ -32,17 +33,14 @@ class DetailFeedFragment : Fragment() {
         binding.apply {
             toolbar.setNavigationOnClickListener { findNavController().popBackStack() }
 
-            val photo = arguments?.getString("photo")
-            val name = arguments?.getString("name")
-            val date = arguments?.getString("date")
-            val desc = arguments?.getString("description")
+            val getEntity = arguments?.getParcelable<FeedEntity>("feedEntity")
 
             Glide.with(this@DetailFeedFragment)
-                .load(photo)
+                .load(getEntity?.image)
                 .into(ivDetail)
-            tvName.text = name
-            tvDate.text = date?.let { formatDate(it) }
-            tvDesc.text = desc
+            tvName.text = getEntity?.name
+            tvDate.text = getEntity?.date?.let { formatDate(it) }
+            tvDesc.text = getEntity?.description
         }
     }
 
