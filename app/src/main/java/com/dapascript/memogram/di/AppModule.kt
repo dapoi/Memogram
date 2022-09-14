@@ -2,6 +2,7 @@ package com.dapascript.memogram.di
 
 import android.content.Context
 import androidx.room.Room
+import com.dapascript.memogram.BuildConfig
 import com.dapascript.memogram.data.preference.UserPreference
 import com.dapascript.memogram.data.source.UserRepository
 import com.dapascript.memogram.data.source.UserRepositoryImpl
@@ -27,6 +28,9 @@ object AppModule {
     fun provideApiService(): ApiService {
         val loggingInterceptor =
             HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+        if (!BuildConfig.DEBUG) {
+            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE)
+        }
         val client = OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
             .build()
