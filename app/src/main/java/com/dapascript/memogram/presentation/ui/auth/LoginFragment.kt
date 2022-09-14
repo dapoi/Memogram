@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.dapascript.memogram.R
 import com.dapascript.memogram.data.preference.UserPreference
 import com.dapascript.memogram.data.source.remote.model.LoginResult
 import com.dapascript.memogram.databinding.FragmentLoginBinding
@@ -85,14 +86,14 @@ class LoginFragment : Fragment() {
             getSnackBar(
                 requireActivity(),
                 binding.root,
-                "Email atau kata sandi salah",
+                resources.getString(R.string.email_or_password),
                 binding.btnLogin
             )
         } else {
             getSnackBar(
                 requireActivity(),
                 binding.root,
-                "Terjadi kesalahan",
+                resources.getString(R.string.error),
                 binding.btnLogin
             )
         }

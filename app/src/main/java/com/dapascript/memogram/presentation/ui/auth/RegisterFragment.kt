@@ -81,14 +81,14 @@ class RegisterFragment : Fragment() {
             getSnackBar(
                 requireActivity(),
                 binding.root,
-                "Email sudah terdaftar",
+                resources.getString(R.string.email_already_in_use),
                 binding.btnSignup
             )
         } else {
             getSnackBar(
                 requireActivity(),
                 binding.root,
-                "Terjadi kesalahan, silahkan coba lagi",
+                resources.getString(R.string.error),
                 binding.btnSignup
             )
         }

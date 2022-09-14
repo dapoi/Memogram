@@ -52,7 +52,7 @@ class EditTextPassword : AppCompatEditText {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 error = if (!s.isNullOrEmpty() && s.length < 6) {
-                    "Kata sandi minimal 6 karakter"
+                    resources.getString(R.string.minimal_password)
                 } else {
                     null
                 }
