@@ -33,7 +33,8 @@ interface ApiService {
     suspend fun getFeed(
         @Header("Authorization") token: String,
         @Query("page") page: Int? = null,
-        @Query("size") size: Int? = null
+        @Query("size") size: Int? = null,
+        @Query("location") location: Int? = null,
     ): FeedResponse
 
     /**
@@ -45,5 +46,7 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Part photo: MultipartBody.Part,
         @Part("description") description: RequestBody,
+        @Part("lat") lat: RequestBody,
+        @Part("lon") lon: RequestBody,
     ): UploadResponse
 }

@@ -19,8 +19,10 @@ class UploadStoryViewModel @Inject constructor(
     fun postStory(
         token: String,
         photo: MultipartBody.Part,
-        description: RequestBody
+        description: RequestBody,
+        lat: RequestBody,
+        lon: RequestBody
     ): LiveData<Resource<UploadResponse>> {
-        return repositoryImpl.postStory(token, photo, description).asLiveData()
+        return repositoryImpl.postStory(token, photo, description, lat, lon).asLiveData()
     }
 }

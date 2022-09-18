@@ -40,13 +40,25 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="26dp"
-                    android:layout_marginTop="26dp"
+                    android:layout_marginTop="?attr/actionBarSize"
                     android:fontFamily="@font/poppins_bold"
+                    android:gravity="center"
                     android:text="@string/app_name"
                     android:textColor="@color/primary_green"
                     android:textSize="20sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/iv_maps"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="26dp"
+                    android:src="@drawable/ic_location"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_feed_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tv_feed_title"
+                    app:tint="@color/primary_green" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cl_feed_child"

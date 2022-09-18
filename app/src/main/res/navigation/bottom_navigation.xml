@@ -17,6 +17,13 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_nav_feed_to_map_fragment"
+            app:destination="@id/map_fragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
     <fragment
         android:id="@+id/nav_upload"
@@ -52,4 +59,9 @@
             android:name="entity"
             app:argType="com.dapascript.memogram.data.source.local.model.FeedEntity" />
     </fragment>
+    <fragment
+        android:id="@+id/map_fragment"
+        android:name="com.dapascript.memogram.presentation.ui.map.MapFragment"
+        android:label="fragment_map"
+        tools:layout="@layout/fragment_map" />
 </navigation>

@@ -1,14 +1,19 @@
 package com.dapascript.memogram.presentation.ui.story
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
+import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -24,10 +29,8 @@ import androidx.navigation.fragment.findNavController
 import com.dapascript.memogram.R
 import com.dapascript.memogram.data.preference.UserPreference
 import com.dapascript.memogram.databinding.FragmentUploadStoryBinding
-import com.dapascript.memogram.utils.Resource
-import com.dapascript.memogram.utils.reduceFileImage
-import com.dapascript.memogram.utils.rotateBitmap
-import com.dapascript.memogram.utils.uriToFile
+import com.dapascript.memogram.utils.*
+import com.google.android.gms.location.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,8 +47,13 @@ class UploadStoryFragment : Fragment() {
     private lateinit var binding: FragmentUploadStoryBinding
     private lateinit var userPreference: UserPreference
     private lateinit var result: Bitmap
+    private lateinit var fusedLocation: FusedLocationProviderClient
+    private lateinit var handler: Handler
+    private lateinit var runnable: Runnable
 
     private var getFile: File? = null
+    private var myLat = 0.0
+    private var myLong = 0.0
     private val uploadStoryViewModel: UploadStoryViewModel by viewModels()
 
     private val launcherIntentCameraX = registerForActivityResult(
@@ -79,24 +87,6 @@ class UploadStoryFragment : Fragment() {
         }
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_CODE_PERMISSIONS) {
-            if (!allPermissionsGranted()) {
-                Toast.makeText(
-                    requireContext(),
-                    "Tidak mendapatkan permission.",
-                    Toast.LENGTH_SHORT
-                ).show()
-                requireActivity().finish()
-            }
-        }
-    }
-
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
         ContextCompat.checkSelfPermission(requireContext(), it) == PackageManager.PERMISSION_GRANTED
     }
@@ -112,6 +102,9 @@ class UploadStoryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        fusedLocation = LocationServices.getFusedLocationProviderClient(requireContext())
+        handler = Handler(Looper.getMainLooper())
 
         if (!allPermissionsGranted()) {
             ActivityCompat.requestPermissions(
@@ -174,11 +167,19 @@ class UploadStoryFragment : Fragment() {
             val file = reduceFileImage(getFile as File)
             val reqBodyImage = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
             val reqBodyDesc = desc.toRequestBody("text/plain".toMediaType())
+            val reqBodyLat = myLat.toString().toRequestBody("text/plain".toMediaType())
+            val reqBodyLong = myLong.toString().toRequestBody("text/plain".toMediaType())
             val multipartImage = MultipartBody.Part.createFormData("photo", file.name, reqBodyImage)
 
             val token = userPreference.userToken
             token.observe(viewLifecycleOwner) {
-                uploadStoryViewModel.postStory(it, multipartImage, reqBodyDesc)
+                uploadStoryViewModel.postStory(
+                    it,
+                    multipartImage,
+                    reqBodyDesc,
+                    reqBodyLat,
+                    reqBodyLong
+                )
                     .observe(viewLifecycleOwner) { result ->
                         when (result) {
                             is Resource.Loading -> uploadState(true)
@@ -235,8 +236,116 @@ class UploadStoryFragment : Fragment() {
         launcherIntentCameraX.launch(intent)
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == PERMISSION_LOCATION) {
+            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                getLocation()
+            }
+        }
+    }
+
+    @Suppress("DEPRECATION")
+    @SuppressLint("MissingPermission", "SetTextI18n")
+    private fun getLocation() {
+        if (checkPermissions()) {
+            if (isLocationEnabled()) {
+                fusedLocation.lastLocation.addOnCompleteListener(requireActivity()) { task ->
+                    val location = task.result
+                    if (location == null) {
+                        requestNewLocationData()
+                    } else {
+                        myLong = location.longitude
+                        myLat = location.latitude
+                        getAddressName(requireActivity(), binding.tvTurnOnLocation, myLat, myLong)
+                    }
+                }
+            } else {
+                binding.tvTurnOnLocation.text = resources.getString(R.string.turn_on_location)
+                myLong = 0.0
+                myLat = 0.0
+            }
+        } else {
+            requestPermissions()
+        }
+    }
+
+    private fun checkPermissions(): Boolean {
+        if (ActivityCompat.checkSelfPermission(
+                requireActivity(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(
+                requireActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            return true
+        }
+        return false
+    }
+
+    private fun requestPermissions() {
+        ActivityCompat.requestPermissions(
+            requireActivity(),
+            arrayOf(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ), PERMISSION_LOCATION
+        )
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun requestNewLocationData() {
+        val locationRequest = LocationRequest.create().apply {
+            priority = Priority.PRIORITY_HIGH_ACCURACY
+            interval = 100
+            fastestInterval = 3000
+            numUpdates = 1
+        }
+        fusedLocation = LocationServices.getFusedLocationProviderClient(requireActivity())
+        fusedLocation.requestLocationUpdates(
+            locationRequest, locationCallback,
+            Looper.myLooper()
+        )
+    }
+
+    private val locationCallback = object : LocationCallback() {
+        override fun onLocationResult(result: LocationResult) {
+            val location = result.lastLocation!!
+            myLong = location.longitude
+            myLat = location.latitude
+        }
+    }
+
+    private fun isLocationEnabled(): Boolean {
+        val locationManager =
+            requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
+            LocationManager.NETWORK_PROVIDER
+        )
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        handler.postDelayed(Runnable {
+            getLocation()
+            handler.postDelayed(runnable, 1000)
+        }.also { runnable = it }, 1000)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        handler.removeCallbacks(runnable)
+    }
+
     companion object {
         const val CAMERA_X_RESULT = 200
+        const val PERMISSION_LOCATION = 100
 
         private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
         private const val REQUEST_CODE_PERMISSIONS = 10

@@ -24,4 +24,6 @@
     <string name="email_already_in_use">E-mail sudah digunakan</string>
     <string name="email_or_password">E-mail atau kata sandi salah</string>
     <string name="error">Terjadi kesalahan</string>
+    <string name="turn_on_location">Aktifkan GPS untuk unggah cerita beserta lokasi</string>
+    <string name="location">Lokasi: %1$s, %2$s</string>
 </resources>

@@ -31,9 +31,9 @@ data class ListStoryItem(
     @Json(name = "id")
     val id: String,
 
-//    @Json(name = "lat")
-//    val lat: Double? = null,
-//
-//    @Json(name = "lon")
-//    val lon: Double? = null,
+    @Json(name = "lat")
+    val lat: Double? = null,
+
+    @Json(name = "lon")
+    val lon: Double? = null,
 )

@@ -108,6 +108,20 @@
             app:layout_constraintStart_toStartOf="@+id/btn_camera"
             app:layout_constraintTop_toBottomOf="@id/btn_camera" />
 
+        <TextView
+            android:id="@+id/tv_turn_on_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/poppins_semibold"
+            android:textAlignment="center"
+            android:textColor="@color/primary_green"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="@+id/btn_upload"
+            app:layout_constraintStart_toStartOf="@+id/btn_upload"
+            app:layout_constraintTop_toBottomOf="@+id/btn_upload"
+            tools:text="Hidupkan lokasi" />
+
         <ProgressBar
             android:id="@+id/progress_bar"
             android:layout_width="60dp"
@@ -118,7 +132,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_upload" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_turn_on_location" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

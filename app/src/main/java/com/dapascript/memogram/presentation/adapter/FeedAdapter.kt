@@ -2,6 +2,7 @@ package com.dapascript.memogram.presentation.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -11,12 +12,10 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.dapascript.memogram.data.source.local.model.FeedEntity
 import com.dapascript.memogram.databinding.ItemListFeedBinding
 import com.dapascript.memogram.utils.formatDate
+import com.dapascript.memogram.utils.getAddressName
 import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.ShimmerDrawable
 import com.iamageo.library.AnotherReadMore
-import java.text.DateFormat
-import java.text.SimpleDateFormat
-import java.util.*
 
 class FeedAdapter(
     context: Context
@@ -56,6 +55,13 @@ class FeedAdapter(
                 tvName.text = feedEntity.name
                 readMore.addReadMoreTo(tvDesc, feedEntity.description)
                 tvDate.text = formatDate(feedEntity.date)
+                feedEntity.apply {
+                    if (lat != null && lon != null) {
+                        getAddressName(itemView.context, tvLocation, lat, lon)
+                    } else {
+                        tvLocation.visibility = View.GONE
+                    }
+                }
             }
         }
 

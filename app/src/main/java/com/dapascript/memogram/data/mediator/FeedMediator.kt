@@ -80,6 +80,8 @@ class FeedMediator(
                         stories.description,
                         stories.photoUrl,
                         stories.createdAt,
+                        stories.lat,
+                        stories.lon,
                     ).let { local.add(it) }
                 }
                 feedDB.feedKeysDao().insertKeys(keys)

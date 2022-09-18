@@ -7,6 +7,7 @@ import androidx.paging.PagingData
 import com.dapascript.memogram.data.mediator.FeedMediator
 import com.dapascript.memogram.data.source.local.db.FeedDatabase
 import com.dapascript.memogram.data.source.local.model.FeedEntity
+import com.dapascript.memogram.data.source.remote.model.FeedResponse
 import com.dapascript.memogram.data.source.remote.model.LoginResponse
 import com.dapascript.memogram.data.source.remote.model.RegisterResponse
 import com.dapascript.memogram.data.source.remote.model.UploadResponse
@@ -73,15 +74,33 @@ class UserRepositoryImpl @Inject constructor(
         ).flow
     }
 
+    override fun getFeedLocation(token: String): Flow<Resource<FeedResponse>> {
+        return flow {
+            emit(Resource.Loading())
+            try {
+                val response = apiService.getFeed(
+                    token = "Bearer $token",
+                    size = 30,
+                    location = 1
+                )
+                emit(Resource.Success(response))
+            } catch (e: Exception) {
+                emit(Resource.Error(e.message.toString()))
+            }
+        }
+    }
+
     override fun postStory(
         token: String,
         photo: MultipartBody.Part,
-        desc: RequestBody
+        desc: RequestBody,
+        lat: RequestBody,
+        lon: RequestBody
     ): Flow<Resource<UploadResponse>> {
         return flow {
             emit(Resource.Loading())
             try {
-                val response = apiService.postStory("Bearer $token", photo, desc)
+                val response = apiService.postStory("Bearer $token", photo, desc, lat, lon)
                 emit(Resource.Success(response))
             } catch (e: Exception) {
                 emit(Resource.Error(e.message.toString()))

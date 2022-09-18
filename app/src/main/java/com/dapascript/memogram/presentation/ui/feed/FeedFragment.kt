@@ -17,6 +17,7 @@ import com.dapascript.memogram.data.preference.UserPreference
 import com.dapascript.memogram.databinding.FragmentFeedBinding
 import com.dapascript.memogram.presentation.adapter.FeedAdapter
 import com.dapascript.memogram.presentation.adapter.LoadPagingAdapter
+import com.dapascript.memogram.presentation.ui.story.UploadStoryFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -40,6 +41,7 @@ class FeedFragment : Fragment() {
         } else {
             binding = FragmentFeedBinding.inflate(inflater, container, false)
             setAdapter()
+            setViewModel()
         }
         return binding.root
     }
@@ -47,8 +49,6 @@ class FeedFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        setViewModel()
 
         Calendar.getInstance().also {
             with(binding.tvGreeting) {
@@ -65,6 +65,8 @@ class FeedFragment : Fragment() {
         name.observe(viewLifecycleOwner) {
             binding.tvName.text = it
         }
+
+        binding.ivMaps.setOnClickListener { findNavController().navigate(R.id.action_nav_feed_to_map_fragment) }
     }
 
     private fun setAdapter() {

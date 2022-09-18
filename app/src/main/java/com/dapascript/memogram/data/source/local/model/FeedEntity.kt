@@ -14,4 +14,6 @@ data class FeedEntity(
     val description: String,
     val image: String,
     val date: String,
+    val lat: Double?,
+    val lon: Double?,
 ) : Parcelable
