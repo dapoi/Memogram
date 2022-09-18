@@ -56,7 +56,21 @@ class LoginFragment : Fragment() {
                 val email = etEmail.text.toString()
                 val password = etPassword.text.toString()
 
-                loginUser(email, password)
+                when {
+                    email.isEmpty() -> {
+                        etEmail.error = resources.getString(R.string.empty_email)
+                        etEmail.requestFocus()
+                    }
+                    password.isEmpty() -> {
+                        etPassword.error = resources.getString(R.string.empty_password)
+                        etPassword.requestFocus()
+                    }
+                    else -> {
+                        etEmail.error = null
+                        etPassword.error = null
+                        loginUser(email, password)
+                    }
+                }
             }
         }
     }

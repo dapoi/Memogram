@@ -17,7 +17,6 @@ import com.dapascript.memogram.data.preference.UserPreference
 import com.dapascript.memogram.databinding.FragmentFeedBinding
 import com.dapascript.memogram.presentation.adapter.FeedAdapter
 import com.dapascript.memogram.presentation.adapter.LoadPagingAdapter
-import com.dapascript.memogram.presentation.ui.story.UploadStoryFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -124,6 +123,13 @@ class FeedFragment : Fragment() {
                                 clEmptyState.visibility = View.GONE
                                 Log.e("FeedFragment", "Error: ${loadState.refresh}")
                             }
+                        }
+                    }
+
+                    // when index 0 updated, scroll to top
+                    if (feedAdapter.itemCount > 0) {
+                        if (feedAdapter.snapshot().items[0].id == feedAdapter.snapshot().items[0].id) {
+                            rvFeed.scrollToPosition(0)
                         }
                     }
                 }

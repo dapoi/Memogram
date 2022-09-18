@@ -21,6 +21,9 @@
     <string name="new_post">Postingan Baru</string>
     <string name="minimal_password">Kata sandi minimal 6 karakter</string>
     <string name="invalid_email">E-mail tidak valid</string>
+    <string name="empty_name">Nama harus diisi</string>
+    <string name="empty_email">E-mail harus diisi</string>
+    <string name="empty_password">Kata sandi harus diisi</string>
     <string name="email_already_in_use">E-mail sudah digunakan</string>
     <string name="email_or_password">E-mail atau kata sandi salah</string>
     <string name="error">Terjadi kesalahan</string>

@@ -2,6 +2,7 @@ package com.dapascript.memogram.presentation.ui.auth
 
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,9 +47,28 @@ class RegisterFragment : Fragment() {
                 val name = etName.text.toString()
                 val email = etEmail.text.toString()
                 val password = etPassword.text.toString()
-                showControl(false)
 
-                registerUser(name, email, password)
+                when {
+                    name.isEmpty() -> {
+                        etName.error = resources.getString(R.string.empty_name)
+                        etName.requestFocus()
+                    }
+                    email.isEmpty() -> {
+                        etEmail.error = resources.getString(R.string.empty_email)
+                        etEmail.requestFocus()
+                    }
+                    password.isEmpty() -> {
+                        etPassword.error = resources.getString(R.string.empty_password)
+                        etPassword.requestFocus()
+                    }
+                    else -> {
+                        etName.error = null
+                        etEmail.error = null
+                        etPassword.error = null
+                        showControl(false)
+                        registerUser(name, email, password)
+                    }
+                }
             }
         }
     }
@@ -71,6 +91,7 @@ class RegisterFragment : Fragment() {
                 is Resource.Error -> {
                     showControl(false)
                     showSnackBar(it.message!!)
+                    Log.e("RegisterFragment", it.message)
                 }
             }
         }
