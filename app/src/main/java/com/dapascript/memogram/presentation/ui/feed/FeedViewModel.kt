@@ -1,7 +1,6 @@
 package com.dapascript.memogram.presentation.ui.feed
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.dapascript.memogram.data.source.UserRepositoryImpl

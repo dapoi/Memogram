@@ -101,7 +101,7 @@ class FeedAdapter(
     }
 
     companion object {
-        private val DIFF_UTIL = object : DiffUtil.ItemCallback<FeedEntity>() {
+        val DIFF_UTIL = object : DiffUtil.ItemCallback<FeedEntity>() {
             override fun areItemsTheSame(oldItem: FeedEntity, newItem: FeedEntity): Boolean {
                 return oldItem.id == newItem.id
             }
