@@ -1,0 +1,20 @@
+# Unit Test ViewModel
+AuthViewModelTest(Login & Register):
+- Memastikan data response dari API sesuai dengan yang diharapkan
+- Memastikan response ketika eror, akan menampilkan pesan error sesuai dengan yang diharapkan
+
+FeedViewModelTest:
+- Memastikan data response tidak null
+- Memastikan ukuran data response sesuai dengan ukuran data dummy
+
+UploadStoryViewModelTest:
+- Memastikan data yang diupload sesuai dengan data yang diharapkan (data dummy)
+- Memastikan response ketika eror, akan menampilkan pesan error sesuai dengan yang diharapkan
+
+LocationViewModelTest:
+- Memastikan data response sesuai dengan data dummy
+
+# Unit Test Repository
+UserRepositoryImplTest:
+- Memastikan seluruh function yang tersedia, menghasilkan data response yang sesuai
+  dengan data dummy
