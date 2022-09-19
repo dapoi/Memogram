@@ -29,4 +29,9 @@
     <string name="error">Terjadi kesalahan</string>
     <string name="turn_on_location">Aktifkan GPS untuk unggah cerita beserta lokasi</string>
     <string name="location">Lokasi: %1$s, %2$s</string>
+    <string name="landscape">Upload Foto Dalam Bentuk Landscape</string>
+    <string name="morning">Hi! Selamat Pagi</string>
+    <string name="afternoon">Hi! Selamat Siang</string>
+    <string name="evening">Hi! Selamat Sore</string>
+    <string name="night">Hi! Selamat Malam</string>
 </resources>

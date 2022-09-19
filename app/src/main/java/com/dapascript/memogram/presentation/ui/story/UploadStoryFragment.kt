@@ -1,7 +1,6 @@
 package com.dapascript.memogram.presentation.ui.story
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
@@ -69,8 +68,12 @@ class UploadStoryFragment : Fragment() {
                 isBackCamera
             )
 
-            binding.btnUpload.isEnabled = true
-            binding.ivCameraPlaceholder.setImageBitmap(result)
+            binding.apply {
+                btnUpload.isEnabled = true
+                tvEmpty.visibility = View.GONE
+                ivPhoto.visibility = View.VISIBLE
+                ivPhoto.setImageBitmap(result)
+            }
         }
     }
 
@@ -82,8 +85,12 @@ class UploadStoryFragment : Fragment() {
             val file = uriToFile(uri, requireContext())
             getFile = file
 
-            binding.btnUpload.isEnabled = true
-            binding.ivCameraPlaceholder.setImageURI(uri)
+            binding.apply {
+                btnUpload.isEnabled = true
+                tvEmpty.visibility = View.GONE
+                ivPhoto.visibility = View.VISIBLE
+                ivPhoto.setImageURI(uri)
+            }
         }
     }
 
@@ -185,9 +192,8 @@ class UploadStoryFragment : Fragment() {
                             is Resource.Loading -> uploadState(true)
                             is Resource.Success -> {
                                 binding.etDesc.text.clear()
-                                binding.ivCameraPlaceholder.setImageResource(
-                                    R.drawable.ic_image
-                                )
+                                binding.ivPhoto.visibility = View.GONE
+                                binding.tvEmpty.visibility = View.VISIBLE
                                 uploadState(false)
                                 Toast.makeText(
                                     requireContext(),
@@ -236,31 +242,21 @@ class UploadStoryFragment : Fragment() {
         launcherIntentCameraX.launch(intent)
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        if (requestCode == PERMISSION_LOCATION) {
-            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                getLocation()
-            }
-        }
-    }
-
-    @Suppress("DEPRECATION")
-    @SuppressLint("MissingPermission", "SetTextI18n")
     private fun getLocation() {
-        if (checkPermissions()) {
+        if (ContextCompat.checkSelfPermission(
+                requireContext().applicationContext,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
             if (isLocationEnabled()) {
                 fusedLocation.lastLocation.addOnCompleteListener(requireActivity()) { task ->
                     val location = task.result
-                    if (location == null) {
-                        requestNewLocationData()
-                    } else {
+                    if (location != null) {
                         myLong = location.longitude
                         myLat = location.latitude
                         getAddressName(requireActivity(), binding.tvTurnOnLocation, myLat, myLong)
+                    } else {
+                        requestNewLocationData()
                     }
                 }
             } else {
@@ -273,21 +269,6 @@ class UploadStoryFragment : Fragment() {
         }
     }
 
-    private fun checkPermissions(): Boolean {
-        if (ActivityCompat.checkSelfPermission(
-                requireActivity(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(
-                requireActivity(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            return true
-        }
-        return false
-    }
-
     private fun requestPermissions() {
         ActivityCompat.requestPermissions(
             requireActivity(),
@@ -298,7 +279,6 @@ class UploadStoryFragment : Fragment() {
         )
     }
 
-    @SuppressLint("MissingPermission")
     private fun requestNewLocationData() {
         val locationRequest = LocationRequest.create().apply {
             priority = Priority.PRIORITY_HIGH_ACCURACY
@@ -307,10 +287,16 @@ class UploadStoryFragment : Fragment() {
             numUpdates = 1
         }
         fusedLocation = LocationServices.getFusedLocationProviderClient(requireActivity())
-        fusedLocation.requestLocationUpdates(
-            locationRequest, locationCallback,
-            Looper.myLooper()
-        )
+        if (ContextCompat.checkSelfPermission(
+                requireContext().applicationContext,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            fusedLocation.requestLocationUpdates(
+                locationRequest, locationCallback,
+                Looper.myLooper()
+            )
+        }
     }
 
     private val locationCallback = object : LocationCallback() {

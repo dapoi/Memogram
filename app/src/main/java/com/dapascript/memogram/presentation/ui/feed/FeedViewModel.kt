@@ -13,5 +13,5 @@ class FeedViewModel @Inject constructor(
     private val repositoryImpl: UserRepositoryImpl
 ) : ViewModel() {
 
-    fun getFeed(token: String) = repositoryImpl.getFeed(token).cachedIn(viewModelScope).asLiveData()
+    fun getFeed(token: String) = repositoryImpl.getFeed(token).cachedIn(viewModelScope)
 }

@@ -16,6 +16,7 @@ import com.dapascript.memogram.utils.getAddressName
 import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.ShimmerDrawable
 import com.iamageo.library.AnotherReadMore
+import java.util.*
 
 class FeedAdapter(
     context: Context
@@ -52,7 +53,7 @@ class FeedAdapter(
                     .placeholder(shimmerDrawable)
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .into(ivPhoto)
-                tvName.text = feedEntity.name
+                tvName.text = capitalizeEachWord(feedEntity.name)
                 readMore.addReadMoreTo(tvDesc, feedEntity.description)
                 tvDate.text = formatDate(feedEntity.date)
                 feedEntity.apply {
@@ -63,6 +64,17 @@ class FeedAdapter(
                     }
                 }
             }
+        }
+
+        private fun capitalizeEachWord(str: String): String {
+            val words = str.split(" ")
+            val capitalizeWordList: MutableList<String> = ArrayList()
+            for (i in words.indices) {
+                val word = words[i]
+                val cap = word.substring(0, 1).uppercase(Locale.getDefault()) + word.substring(1)
+                capitalizeWordList.add(cap)
+            }
+            return capitalizeWordList.joinToString(" ")
         }
 
         init {

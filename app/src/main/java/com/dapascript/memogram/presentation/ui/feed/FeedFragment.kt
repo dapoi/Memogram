@@ -1,6 +1,5 @@
 package com.dapascript.memogram.presentation.ui.feed
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -45,17 +44,16 @@ class FeedFragment : Fragment() {
         return binding.root
     }
 
-    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         Calendar.getInstance().also {
             with(binding.tvGreeting) {
                 when (it.get(Calendar.HOUR_OF_DAY)) {
-                    in 0..11 -> text = "Hi, Selamat Pagi"
-                    in 12..15 -> text = "Hi, Selamat Siang"
-                    in 16..18 -> text = "Hi, Selamat Sore"
-                    in 19..23 -> text = "Hi, Selamat Malam"
+                    in 0..11 -> text = getString(R.string.morning)
+                    in 12..15 -> text = getString(R.string.afternoon)
+                    in 16..18 -> text = getString(R.string.evening)
+                    in 19..23 -> text = getString(R.string.night)
                 }
             }
         }
@@ -91,10 +89,10 @@ class FeedFragment : Fragment() {
         userPreference = UserPreference(requireActivity())
         val token = userPreference.userToken
 
-        token.observe(viewLifecycleOwner) {
-            feedViewModel.getFeed(it).observe(viewLifecycleOwner) {
-                viewLifecycleOwner.lifecycleScope.launch {
-                    feedAdapter.submitData(it)
+        token.observe(viewLifecycleOwner) { bearer ->
+            viewLifecycleOwner.lifecycleScope.launch {
+                feedViewModel.getFeed(bearer).collectLatest { pagingData ->
+                    feedAdapter.submitData(pagingData)
                 }
             }
         }
@@ -123,13 +121,6 @@ class FeedFragment : Fragment() {
                                 clEmptyState.visibility = View.GONE
                                 Log.e("FeedFragment", "Error: ${loadState.refresh}")
                             }
-                        }
-                    }
-
-                    // when index 0 updated, scroll to top
-                    if (feedAdapter.itemCount > 0) {
-                        if (feedAdapter.snapshot().items[0].id == feedAdapter.snapshot().items[0].id) {
-                            rvFeed.scrollToPosition(0)
                         }
                     }
                 }

@@ -3,7 +3,10 @@ package com.dapascript.memogram.presentation.ui.map
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.location.LocationManager
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,8 +22,7 @@ import com.dapascript.memogram.data.source.remote.model.ListStoryItem
 import com.dapascript.memogram.databinding.FragmentMapBinding
 import com.dapascript.memogram.presentation.ui.MainActivity
 import com.dapascript.memogram.utils.Resource
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -38,6 +40,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var gMap: GoogleMap
     private lateinit var fusedLocation: FusedLocationProviderClient
     private lateinit var userPreference: UserPreference
+    private lateinit var handler: Handler
+    private lateinit var runnable: Runnable
 
     private var feedLat = 0.0
     private var feedLng = 0.0
@@ -58,6 +62,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         fusedLocation = LocationServices.getFusedLocationProviderClient(requireActivity())
         userPreference = UserPreference(requireContext())
+        handler = Handler(Looper.getMainLooper())
 
         binding.toolbar.setNavigationOnClickListener { findNavController().popBackStack() }
 
@@ -88,7 +93,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private fun setUpMap(googleMap: GoogleMap, listStory: List<ListStoryItem>) {
         gMap = googleMap
 
-        getDeviceLoc()
+        getLocation()
         for (loc in listStory.indices) {
             feedLat = listStory[loc].lat!!
             feedLng = listStory[loc].lon!!
@@ -104,36 +109,91 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun getDeviceLoc() {
+    private fun getLocation() {
         if (ContextCompat.checkSelfPermission(
                 requireContext().applicationContext,
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            gMap.isMyLocationEnabled = true
-            fusedLocation.lastLocation.addOnSuccessListener { location ->
-                if (location != null) {
-                    val latLng = LatLng(location.latitude, location.longitude)
-                    gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 2f))
-                } else {
-                    Toast.makeText(
-                        requireContext().applicationContext,
-                        "Location not found",
-                        Toast.LENGTH_SHORT
-                    ).show()
+            if (isLocationEnabled()) {
+                gMap.isMyLocationEnabled = true
+                fusedLocation.lastLocation.addOnSuccessListener { location ->
+                    if (location != null) {
+                        val latLng = LatLng(location.latitude, location.longitude)
+                        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8f))
+                    } else {
+                        requestNewLocationData()
+                    }
                 }
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "GPS tidak aktif, silahkan aktifkan GPS",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         } else {
             requestPermissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
         }
     }
 
-    private val requestPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            if (isGranted) {
-                getDeviceLoc()
-            }
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            getLocation()
         }
+    }
+
+    private fun requestNewLocationData() {
+        val locationRequest = LocationRequest.create().apply {
+            priority = Priority.PRIORITY_HIGH_ACCURACY
+            interval = 100
+            fastestInterval = 3000
+            numUpdates = 1
+        }
+        fusedLocation = LocationServices.getFusedLocationProviderClient(requireActivity())
+        if (ContextCompat.checkSelfPermission(
+                requireContext().applicationContext,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            fusedLocation.requestLocationUpdates(
+                locationRequest, locationCallback,
+                Looper.myLooper()
+            )
+        }
+    }
+
+    private val locationCallback = object : LocationCallback() {
+        override fun onLocationResult(result: LocationResult) {
+            val location = result.lastLocation!!
+            val latLng = LatLng(location.latitude, location.longitude)
+            gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8f))
+        }
+    }
+
+    private fun isLocationEnabled(): Boolean {
+        val locationManager =
+            requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
+            LocationManager.NETWORK_PROVIDER
+        )
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        handler.postDelayed(Runnable {
+            getLocation()
+            handler.postDelayed(runnable, 2000)
+        }.also { runnable = it }, 2000)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        handler.removeCallbacks(runnable)
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
