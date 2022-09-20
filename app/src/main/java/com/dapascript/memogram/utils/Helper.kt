@@ -149,20 +149,38 @@ fun formatDate(date: String): String {
     return targetDate.toString()
 }
 
-fun getAddressName(context: Context, tv: TextView, myLat: Double, myLong: Double) {
-    var addressName: String? = null
+fun getAddressName(context: Context, tv: TextView? = null, myLat: Double, myLong: Double) {
+//    var addressName: String? = null
     var countryName: String? = null
     var cityName: String? = null
     val geocoder = Geocoder(context, Locale.getDefault())
     try {
         val addresses: List<Address> = geocoder.getFromLocation(myLat, myLong, 1)
         if (addresses.isNotEmpty()) {
-            addressName = addresses[0].getAddressLine(0)
+//            addressName = addresses[0].getAddressLine(0)
             countryName = addresses[0].countryName
             cityName = addresses[0].locality
         }
     } catch (e: IOException) {
         e.printStackTrace()
     }
-    tv.text = String.format(context.resources.getString(R.string.location), cityName, countryName)
+    tv?.text = String.format(context.resources.getString(R.string.location), cityName, countryName)
+}
+
+fun getAddressSnippet(context: Context, myLat: Double, myLong: Double): String {
+    var countryName: String? = null
+    var cityName: String? = null
+    var stateName: String? = null
+    val geocoder = Geocoder(context, Locale.getDefault())
+    try {
+        val addresses: List<Address> = geocoder.getFromLocation(myLat, myLong, 1)
+        if (addresses.isNotEmpty()) {
+            countryName = addresses[0].countryName
+            cityName = addresses[0].locality
+            stateName = addresses[0].adminArea
+        }
+    } catch (e: IOException) {
+        e.printStackTrace()
+    }
+    return listOf(cityName, stateName, countryName).joinToString(", ")
 }

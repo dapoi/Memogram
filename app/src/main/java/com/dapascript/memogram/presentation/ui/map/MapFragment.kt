@@ -22,12 +22,15 @@ import com.dapascript.memogram.data.source.remote.model.ListStoryItem
 import com.dapascript.memogram.databinding.FragmentMapBinding
 import com.dapascript.memogram.presentation.ui.MainActivity
 import com.dapascript.memogram.utils.Resource
-import com.google.android.gms.location.*
+import com.dapascript.memogram.utils.getAddressSnippet
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MarkerOptions
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -93,13 +96,18 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private fun setUpMap(googleMap: GoogleMap, listStory: List<ListStoryItem>) {
         gMap = googleMap
 
+        val latLngBounds = LatLngBounds.Builder()
         getLocation()
-        for (loc in listStory.indices) {
+        listStory.indices.forEach { loc ->
             feedLat = listStory[loc].lat!!
             feedLng = listStory[loc].lon!!
             val latLng = LatLng(feedLat, feedLng)
+            val address = getAddressSnippet(requireContext(), feedLat, feedLng)
             gMap.apply {
-                addMarker(MarkerOptions().position(latLng).title(listStory[loc].name))
+                addMarker(
+                    MarkerOptions().position(latLng).title(listStory[loc].name).snippet(address)
+                )
+                latLngBounds.include(latLng)
                 uiSettings.apply {
                     isZoomControlsEnabled = true
                     isCompassEnabled = true
@@ -107,6 +115,15 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 }
             }
         }
+        val bounds = latLngBounds.build()
+        gMap.animateCamera(
+            CameraUpdateFactory.newLatLngBounds(
+                bounds,
+                resources.displayMetrics.widthPixels,
+                resources.displayMetrics.heightPixels,
+                300
+            )
+        )
     }
 
     private fun getLocation() {
@@ -117,20 +134,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         ) {
             if (isLocationEnabled()) {
                 gMap.isMyLocationEnabled = true
-                fusedLocation.lastLocation.addOnSuccessListener { location ->
-                    if (location != null) {
-                        val latLng = LatLng(location.latitude, location.longitude)
-                        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8f))
-                    } else {
-                        requestNewLocationData()
-                    }
-                }
             } else {
-                Toast.makeText(
-                    requireContext(),
-                    "GPS tidak aktif, silahkan aktifkan GPS",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(requireContext(), "GPS Tidak Aktif", Toast.LENGTH_SHORT).show()
             }
         } else {
             requestPermissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -145,33 +150,33 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun requestNewLocationData() {
-        val locationRequest = LocationRequest.create().apply {
-            priority = Priority.PRIORITY_HIGH_ACCURACY
-            interval = 100
-            fastestInterval = 3000
-            numUpdates = 1
-        }
-        fusedLocation = LocationServices.getFusedLocationProviderClient(requireActivity())
-        if (ContextCompat.checkSelfPermission(
-                requireContext().applicationContext,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            fusedLocation.requestLocationUpdates(
-                locationRequest, locationCallback,
-                Looper.myLooper()
-            )
-        }
-    }
-
-    private val locationCallback = object : LocationCallback() {
-        override fun onLocationResult(result: LocationResult) {
-            val location = result.lastLocation!!
-            val latLng = LatLng(location.latitude, location.longitude)
-            gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8f))
-        }
-    }
+//    private fun requestNewLocationData() {
+//        val locationRequest = LocationRequest.create().apply {
+//            priority = Priority.PRIORITY_HIGH_ACCURACY
+//            interval = 100
+//            fastestInterval = 3000
+//            numUpdates = 1
+//        }
+//        fusedLocation = LocationServices.getFusedLocationProviderClient(requireActivity())
+//        if (ContextCompat.checkSelfPermission(
+//                requireContext().applicationContext,
+//                Manifest.permission.ACCESS_COARSE_LOCATION
+//            ) == PackageManager.PERMISSION_GRANTED
+//        ) {
+//            fusedLocation.requestLocationUpdates(
+//                locationRequest, locationCallback,
+//                Looper.myLooper()
+//            )
+//        }
+//    }
+//
+//    private val locationCallback = object : LocationCallback() {
+//        override fun onLocationResult(result: LocationResult) {
+//            val location = result.lastLocation!!
+//            val latLng = LatLng(location.latitude, location.longitude)
+//            gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8f))
+//        }
+//    }
 
     private fun isLocationEnabled(): Boolean {
         val locationManager =
