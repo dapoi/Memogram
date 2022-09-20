@@ -34,7 +34,7 @@ interface UserRepository {
         token: String,
         photo: MultipartBody.Part,
         desc: RequestBody,
-        lat: RequestBody,
-        lon: RequestBody
+        lat: RequestBody?,
+        lon: RequestBody?
     ): Flow<Resource<UploadResponse>>
 }
