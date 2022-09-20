@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import androidx.paging.*
 import androidx.recyclerview.widget.ListUpdateCallback
+import com.dapascript.memogram.data.source.UserRepository
 import com.dapascript.memogram.data.source.UserRepositoryImpl
 import com.dapascript.memogram.data.source.local.model.FeedEntity
 import com.dapascript.memogram.presentation.adapter.FeedAdapter
@@ -17,6 +18,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -35,7 +37,7 @@ class FeedViewModelTest {
     var coroutinesTestRule = CoroutinesTestRule()
 
     @Mock
-    private lateinit var repositoryImpl: UserRepositoryImpl
+    private lateinit var userRepository: UserRepository
 
     private val token = "token"
 
@@ -46,10 +48,10 @@ class FeedViewModelTest {
         val feed = MutableLiveData<PagingData<FeedEntity>>()
         feed.value = dataPaging
 
-        val repository = repositoryImpl.getFeed(token)
+        val repository = userRepository.getFeed(token)
         `when`(repository).thenReturn(flowOf(feed.value!!))
 
-        val feedViewModel = FeedViewModel(repositoryImpl)
+        val feedViewModel = FeedViewModel(userRepository)
         val actualFeed = feedViewModel.getFeed(token).asLiveData().getOrAwaitValue()
         val differ = AsyncPagingDataDiffer(
             diffCallback = FeedAdapter.DIFF_UTIL,
@@ -70,10 +72,10 @@ class FeedViewModelTest {
         val feed = MutableLiveData<PagingData<FeedEntity>>()
         feed.value = dataPaging
 
-        val repository = repositoryImpl.getFeed(token)
+        val repository = userRepository.getFeed(token)
         `when`(repository).thenReturn(flowOf(feed.value!!))
 
-        val feedViewModel = FeedViewModel(repositoryImpl)
+        val feedViewModel = FeedViewModel(userRepository)
         val actualFeed = feedViewModel.getFeed(token).asLiveData().getOrAwaitValue()
         val differ = AsyncPagingDataDiffer(
             diffCallback = FeedAdapter.DIFF_UTIL,
