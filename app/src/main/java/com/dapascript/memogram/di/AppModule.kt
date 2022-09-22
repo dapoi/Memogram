@@ -7,6 +7,7 @@ import com.dapascript.memogram.data.preference.UserPreference
 import com.dapascript.memogram.data.source.UserRepository
 import com.dapascript.memogram.data.source.UserRepositoryImpl
 import com.dapascript.memogram.data.source.local.db.FeedDatabase
+import com.dapascript.memogram.data.source.remote.network.ApiPaging
 import com.dapascript.memogram.data.source.remote.network.ApiService
 import dagger.Module
 import dagger.Provides
@@ -44,6 +45,25 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideApiPaging(): ApiPaging {
+        val loggingInterceptor =
+            HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+        if (!BuildConfig.DEBUG) {
+            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE)
+        }
+        val client = OkHttpClient.Builder()
+            .addInterceptor(loggingInterceptor)
+            .build()
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://story-api.dicoding.dev/v1/")
+            .addConverterFactory(MoshiConverterFactory.create())
+            .client(client)
+            .build()
+        return retrofit.create(ApiPaging::class.java)
+    }
+
+    @Provides
+    @Singleton
     fun provideDataStore(@ApplicationContext context: Context): UserPreference =
         UserPreference(context)
 
@@ -60,6 +80,7 @@ object AppModule {
     @Singleton
     fun provideRepository(
         apiService: ApiService,
+        apiPaging: ApiPaging,
         feedDB: FeedDatabase
-    ): UserRepository = UserRepositoryImpl(apiService, feedDB)
+    ): UserRepository = UserRepositoryImpl(apiService, apiPaging, feedDB)
 }

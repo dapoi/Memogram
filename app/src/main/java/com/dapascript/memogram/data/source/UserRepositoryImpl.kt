@@ -11,6 +11,7 @@ import com.dapascript.memogram.data.source.remote.model.FeedResponse
 import com.dapascript.memogram.data.source.remote.model.LoginResponse
 import com.dapascript.memogram.data.source.remote.model.RegisterResponse
 import com.dapascript.memogram.data.source.remote.model.UploadResponse
+import com.dapascript.memogram.data.source.remote.network.ApiPaging
 import com.dapascript.memogram.data.source.remote.network.ApiService
 import com.dapascript.memogram.utils.Resource
 import kotlinx.coroutines.flow.Flow
@@ -23,6 +24,7 @@ import javax.inject.Singleton
 @Singleton
 class UserRepositoryImpl @Inject constructor(
     private val apiService: ApiService,
+    private val apiPaging: ApiPaging,
     private val feedDB: FeedDatabase
 ) : UserRepository {
 
@@ -66,7 +68,7 @@ class UserRepositoryImpl @Inject constructor(
         return Pager(
             config = PagingConfig(pageSize = 10),
             remoteMediator = FeedMediator(
-                apiService,
+                apiPaging,
                 feedDB,
                 "Bearer $token"
             ),

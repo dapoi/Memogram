@@ -7,7 +7,6 @@ import androidx.lifecycle.asLiveData
 import androidx.paging.*
 import androidx.recyclerview.widget.ListUpdateCallback
 import com.dapascript.memogram.data.source.UserRepository
-import com.dapascript.memogram.data.source.UserRepositoryImpl
 import com.dapascript.memogram.data.source.local.model.FeedEntity
 import com.dapascript.memogram.presentation.adapter.FeedAdapter
 import com.dapascript.memogram.utils.CoroutinesTestRule
@@ -18,7 +17,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith

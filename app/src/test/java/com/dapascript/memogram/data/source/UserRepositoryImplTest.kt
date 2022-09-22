@@ -4,16 +4,16 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.asLiveData
 import androidx.paging.AsyncPagingDataDiffer
 import androidx.paging.ExperimentalPagingApi
-import com.dapascript.memogram.data.source.local.db.FeedDatabase
-import com.dapascript.memogram.data.source.remote.network.ApiService
 import com.dapascript.memogram.presentation.adapter.FeedAdapter
 import com.dapascript.memogram.presentation.ui.feed.PagedFeedSource
 import com.dapascript.memogram.presentation.ui.feed.noopListUpdateCallback
 import com.dapascript.memogram.utils.CoroutinesTestRule
 import com.dapascript.memogram.utils.DataDummy
 import com.dapascript.memogram.utils.Resource
+import com.dapascript.memogram.utils.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -22,8 +22,8 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.Mockito
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.mock
 import org.mockito.junit.MockitoJUnitRunner
 
 @ExperimentalCoroutinesApi
@@ -36,15 +36,6 @@ class UserRepositoryImplTest {
     @get:Rule
     var coroutinesTestRule = CoroutinesTestRule()
 
-    @Mock
-    private lateinit var apiService: ApiService
-
-    @Mock
-    private lateinit var feedDB: FeedDatabase
-
-    @Mock
-    private lateinit var repositoryImplMock: UserRepositoryImpl
-
     private lateinit var repositoryImpl: UserRepositoryImpl
 
     private val uploadResponse = DataDummy.dummyPhoto()
@@ -55,32 +46,33 @@ class UserRepositoryImplTest {
     private val nameDummy = "dummyName"
     private val emailDummy = "mail@mail.com"
     private val passwordDummy = "password"
-    private val dataUser = mapOf(
-        "email" to emailDummy,
-        "password" to passwordDummy
-    )
 
     @Before
-    fun setUp() {
-        repositoryImpl = UserRepositoryImpl(apiService, feedDB)
+    fun setUp() = runBlocking {
+        repositoryImpl = mock(UserRepositoryImpl::class.java)
     }
 
     @Test
     fun `Login User`(): Unit = runTest {
         val dataDummy = DataDummy.dummyLogin()
-        Mockito.`when`(apiService.loginUser(dataUser)).thenReturn(dataDummy)
+        `when`(
+            repositoryImpl.loginUser(
+                emailDummy,
+                passwordDummy
+            )
+        ).thenReturn(flowOf(Resource.Success(dataDummy)))
 
         repositoryImpl.loginUser(emailDummy, passwordDummy).asLiveData().observeForever {
-            Assert.assertNotNull(it)
-            Assert.assertTrue(it is Resource.Success)
-            Assert.assertEquals(Resource.Success(dataDummy), it)
+            Assert.assertEquals(dataDummy, it.data)
         }
     }
 
     @Test
     fun `Register User`() = runTest {
         val dataDummy = DataDummy.dummyRegister()
-        Mockito.`when`(apiService.registerUser(dataUser)).thenReturn(dataDummy)
+        `when`(repositoryImpl.registerUser(nameDummy, emailDummy, passwordDummy)).thenReturn(
+            flowOf(Resource.Success(dataDummy))
+        )
 
         repositoryImpl.registerUser(nameDummy, emailDummy, passwordDummy).asLiveData()
             .observeForever {
@@ -93,60 +85,55 @@ class UserRepositoryImplTest {
     @Test
     fun `Upload Photo`() = runTest {
         val result = uploadResponse
-        Mockito.`when`(
-            apiService.postStory(
+
+        `when`(
+            repositoryImpl.postStory(
                 tokenDummy,
                 photoDummy,
                 descDummy,
                 null,
                 null
             )
-        ).thenReturn(result)
+        ).thenReturn(flowOf(Resource.Success(result)))
 
-        repositoryImpl.postStory(
-            tokenDummy,
-            photoDummy,
-            descDummy,
-            null,
-            null
-        ).collect { response ->
-            response.data?.let {
-                Assert.assertEquals(uploadResponse, it)
+        repositoryImpl.postStory(tokenDummy, photoDummy, descDummy, null, null).asLiveData()
+            .observeForever {
+                Assert.assertNotNull(it)
+                Assert.assertTrue(it is Resource.Success)
+                Assert.assertEquals(Resource.Success(result), it)
             }
-        }
     }
 
     @Test
     fun `Get Feed`() = runTest {
-        val dataDummy = DataDummy.dummyFeed()
-        val dataPaging = PagedFeedSource.snapshot(dataDummy)
+        val dummy = DataDummy.dummyFeed()
+        val dataPaging = PagedFeedSource.snapshot(dummy)
         val result = flowOf(dataPaging)
 
-        Mockito.`when`(repositoryImplMock.getFeed(tokenDummy)).thenReturn(result)
+        `when`(repositoryImpl.getFeed(tokenDummy)).thenReturn(
+            result
+        )
 
-        repositoryImplMock.getFeed(tokenDummy).collect {
-            val differ = AsyncPagingDataDiffer(
-                diffCallback = FeedAdapter.DIFF_UTIL,
-                updateCallback = noopListUpdateCallback,
-                mainDispatcher = coroutinesTestRule.testDispatcher,
-                workerDispatcher = coroutinesTestRule.testDispatcher
-            )
-            differ.submitData(it)
-
-            Assert.assertNotNull(differ.snapshot())
-            Assert.assertEquals(dataDummy.size, differ.snapshot().size)
-        }
+        val actual = repositoryImpl.getFeed(tokenDummy).asLiveData().getOrAwaitValue()
+        val dif = AsyncPagingDataDiffer(
+            diffCallback = FeedAdapter.DIFF_UTIL,
+            updateCallback = noopListUpdateCallback,
+            mainDispatcher = coroutinesTestRule.testDispatcher,
+            workerDispatcher = coroutinesTestRule.testDispatcher
+        )
+        dif.submitData(actual)
+        Assert.assertEquals(dummy.size, dif.snapshot().size)
     }
 
     @Test
     fun `Get Feed Location`() = runTest {
         val result = locationResponse
-        Mockito.`when`(apiService.getFeed(tokenDummy)).thenReturn(result)
+        `when`(repositoryImpl.getFeedLocation(tokenDummy)).thenReturn(flowOf(Resource.Success(result)))
 
-        repositoryImpl.getFeedLocation(tokenDummy).collect { response ->
-            response.data?.let {
-                Assert.assertEquals(locationResponse, it)
-            }
+        repositoryImpl.getFeedLocation(tokenDummy).asLiveData().observeForever {
+            Assert.assertNotNull(it)
+            Assert.assertTrue(it is Resource.Success)
+            Assert.assertEquals(Resource.Success(result), it)
         }
     }
 }

@@ -8,13 +8,13 @@ import androidx.room.withTransaction
 import com.dapascript.memogram.data.source.local.db.FeedDatabase
 import com.dapascript.memogram.data.source.local.model.FeedEntity
 import com.dapascript.memogram.data.source.local.model.FeedKeys
-import com.dapascript.memogram.data.source.remote.network.ApiService
+import com.dapascript.memogram.data.source.remote.network.ApiPaging
 import retrofit2.HttpException
 import java.io.IOException
 
 @OptIn(ExperimentalPagingApi::class)
 class FeedMediator(
-    private val apiService: ApiService,
+    private val apiPaging: ApiPaging,
     private val feedDB: FeedDatabase,
     private val token: String
 ) : RemoteMediator<Int, FeedEntity>() {
@@ -53,7 +53,7 @@ class FeedMediator(
         }
 
         try {
-            val response = apiService.getFeed(
+            val response = apiPaging.getFeed(
                 token = token,
                 page = page,
                 size = state.config.pageSize
