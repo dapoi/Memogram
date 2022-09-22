@@ -76,13 +76,14 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
+        gMap = googleMap
         userPreference.userToken.observe(viewLifecycleOwner) { token ->
             locationViewModel.getLocation(token).observe(viewLifecycleOwner) { result ->
                 when (result) {
                     is Resource.Loading -> binding.progressBar.visibility = View.VISIBLE
                     is Resource.Success -> {
                         binding.progressBar.visibility = View.GONE
-                        setUpMap(googleMap, result.data!!.listStory)
+                        setUpMap( result.data!!.listStory )
                     }
                     is Resource.Error -> {
                         binding.progressBar.visibility = View.GONE
@@ -93,26 +94,28 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun setUpMap(googleMap: GoogleMap, listStory: List<ListStoryItem>) {
-        gMap = googleMap
-
+    private fun setUpMap(listStory: List<ListStoryItem>) {
         val latLngBounds = LatLngBounds.Builder()
         getLocation()
         listStory.indices.forEach { loc ->
             feedLat = listStory[loc].lat!!
             feedLng = listStory[loc].lon!!
-            val latLng = LatLng(feedLat, feedLng)
-            val address = getAddressSnippet(requireContext(), feedLat, feedLng)
-            gMap.apply {
-                addMarker(
-                    MarkerOptions().position(latLng).title(listStory[loc].name).snippet(address)
-                )
-                latLngBounds.include(latLng)
-                uiSettings.apply {
-                    isZoomControlsEnabled = true
-                    isCompassEnabled = true
-                    isMapToolbarEnabled = true
+            try {
+                val latLng = LatLng(feedLat, feedLng)
+                val address = getAddressSnippet(requireContext(), feedLat, feedLng)
+                gMap.apply {
+                    addMarker(
+                        MarkerOptions().position(latLng).title(listStory[loc].name).snippet(address)
+                    )
+                    latLngBounds.include(latLng)
+                    uiSettings.apply {
+                        isZoomControlsEnabled = true
+                        isCompassEnabled = true
+                        isMapToolbarEnabled = true
+                    }
                 }
+            }catch (e:Exception){
+                e.printStackTrace()
             }
         }
         val bounds = latLngBounds.build()
