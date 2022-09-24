@@ -155,7 +155,7 @@ fun getAddressName(context: Context, tv: TextView? = null, myLat: Double, myLong
     var cityName: String? = null
     val geocoder = Geocoder(context, Locale.getDefault())
     try {
-        val addresses: List<Address> = geocoder.getFromLocation(myLat, myLong, 1)
+        val addresses: List<Address> = geocoder.getFromLocation(myLat, myLong, 1) as List<Address>
         if (addresses.isNotEmpty()) {
 //            addressName = addresses[0].getAddressLine(0)
             countryName = addresses[0].countryName
@@ -173,7 +173,7 @@ fun getAddressSnippet(context: Context, myLat: Double, myLong: Double): String {
     var stateName: String? = null
     val geocoder = Geocoder(context, Locale.getDefault())
     try {
-        val addresses: List<Address> = geocoder.getFromLocation(myLat, myLong, 1)
+        val addresses: List<Address> = geocoder.getFromLocation(myLat, myLong, 1) as List<Address>
         if (addresses.isNotEmpty()) {
             countryName = addresses[0].countryName
             cityName = addresses[0].locality
