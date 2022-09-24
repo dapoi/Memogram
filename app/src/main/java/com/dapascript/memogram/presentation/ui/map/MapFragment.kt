@@ -83,7 +83,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     is Resource.Loading -> binding.progressBar.visibility = View.VISIBLE
                     is Resource.Success -> {
                         binding.progressBar.visibility = View.GONE
+<<<<<<< HEAD
                         setUpMap(result.data!!.listStory)
+=======
+                        setUpMap( result.data!!.listStory )
+>>>>>>> fd16686df45b993afe37ae79f97098911ece3877
                     }
                     is Resource.Error -> {
                         binding.progressBar.visibility = View.GONE
@@ -95,24 +99,31 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun setUpMap(listStory: List<ListStoryItem>) {
+<<<<<<< HEAD
 
+=======
+>>>>>>> fd16686df45b993afe37ae79f97098911ece3877
         val latLngBounds = LatLngBounds.Builder()
         getLocation()
         listStory.indices.forEach { loc ->
             feedLat = listStory[loc].lat!!
             feedLng = listStory[loc].lon!!
-            val latLng = LatLng(feedLat, feedLng)
-            val address = getAddressSnippet(requireContext(), feedLat, feedLng)
-            gMap.apply {
-                addMarker(
-                    MarkerOptions().position(latLng).title(listStory[loc].name).snippet(address)
-                )
-                latLngBounds.include(latLng)
-                uiSettings.apply {
-                    isZoomControlsEnabled = true
-                    isCompassEnabled = true
-                    isMapToolbarEnabled = true
+            try {
+                val latLng = LatLng(feedLat, feedLng)
+                val address = getAddressSnippet(requireContext(), feedLat, feedLng)
+                gMap.apply {
+                    addMarker(
+                        MarkerOptions().position(latLng).title(listStory[loc].name).snippet(address)
+                    )
+                    latLngBounds.include(latLng)
+                    uiSettings.apply {
+                        isZoomControlsEnabled = true
+                        isCompassEnabled = true
+                        isMapToolbarEnabled = true
+                    }
                 }
+            }catch (e:Exception){
+                e.printStackTrace()
             }
         }
         val bounds = latLngBounds.build()
