@@ -83,11 +83,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     is Resource.Loading -> binding.progressBar.visibility = View.VISIBLE
                     is Resource.Success -> {
                         binding.progressBar.visibility = View.GONE
-<<<<<<< HEAD
                         setUpMap(result.data!!.listStory)
-=======
-                        setUpMap( result.data!!.listStory )
->>>>>>> fd16686df45b993afe37ae79f97098911ece3877
                     }
                     is Resource.Error -> {
                         binding.progressBar.visibility = View.GONE
@@ -99,10 +95,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun setUpMap(listStory: List<ListStoryItem>) {
-<<<<<<< HEAD
-
-=======
->>>>>>> fd16686df45b993afe37ae79f97098911ece3877
         val latLngBounds = LatLngBounds.Builder()
         getLocation()
         listStory.indices.forEach { loc ->
@@ -122,7 +114,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                         isMapToolbarEnabled = true
                     }
                 }
-            }catch (e:Exception){
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
