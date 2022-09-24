@@ -1,7 +1,7 @@
 package com.dapascript.memogram.presentation.ui.story
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.dapascript.memogram.data.source.UserRepository
+import com.dapascript.memogram.data.source.StoryRepositoryImpl
 import com.dapascript.memogram.utils.CoroutinesTestRule
 import com.dapascript.memogram.utils.DataDummy
 import com.dapascript.memogram.utils.Resource
@@ -28,7 +28,7 @@ class UploadStoryViewModelTest {
     var coroutinesTestRule = CoroutinesTestRule()
 
     @Mock
-    private lateinit var userRepository: UserRepository
+    private lateinit var storyRepository: StoryRepositoryImpl
     private lateinit var uploadStoryViewModel: UploadStoryViewModel
 
     private val uploadResponse = DataDummy.dummyPhoto()
@@ -40,14 +40,14 @@ class UploadStoryViewModelTest {
 
     @Before
     fun setUp() {
-        uploadStoryViewModel = UploadStoryViewModel(userRepository)
+        uploadStoryViewModel = UploadStoryViewModel(storyRepository)
     }
 
     @Test
     fun `Upload Success`() = runTest {
         val result = flowOf(Resource.Success(uploadResponse))
         Mockito.`when`(
-            userRepository.postStory(
+            storyRepository.postStory(
                 tokenDummy,
                 photoDummy,
                 descDummy,
@@ -66,7 +66,7 @@ class UploadStoryViewModelTest {
             assert(it.data == uploadResponse)
         }
 
-        Mockito.verify(userRepository).postStory(
+        Mockito.verify(storyRepository).postStory(
             tokenDummy,
             photoDummy,
             descDummy,
@@ -79,7 +79,7 @@ class UploadStoryViewModelTest {
     fun `Upload Failed`() = runTest {
         val result = flowOf(Resource.Error("Error", null))
         Mockito.`when`(
-            userRepository.postStory(
+            storyRepository.postStory(
                 tokenDummy,
                 photoDummy,
                 descDummy,
@@ -98,7 +98,7 @@ class UploadStoryViewModelTest {
             assert(it.message == "Error")
         }
 
-        Mockito.verify(userRepository).postStory(
+        Mockito.verify(storyRepository).postStory(
             tokenDummy,
             photoDummy,
             descDummy,

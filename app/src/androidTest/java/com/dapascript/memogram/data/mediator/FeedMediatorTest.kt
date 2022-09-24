@@ -8,9 +8,12 @@ import com.dapascript.memogram.data.source.local.db.FeedDatabase
 import com.dapascript.memogram.data.source.local.model.FeedEntity
 import com.dapascript.memogram.data.source.remote.model.FeedResponse
 import com.dapascript.memogram.data.source.remote.model.ListStoryItem
+import com.dapascript.memogram.data.source.remote.model.UploadResponse
 import com.dapascript.memogram.data.source.remote.network.ApiPaging
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import org.junit.After
 import org.junit.Assert
 import org.junit.Test
@@ -75,6 +78,19 @@ class FakeAPI : ApiPaging {
         val subList = items.subList((page!! - 1) * size!!, (page - 1) * size + size)
         return FeedResponse(
             listStory = subList,
+            error = false,
+            message = "test"
+        )
+    }
+
+    override suspend fun postStory(
+        token: String,
+        photo: MultipartBody.Part,
+        description: RequestBody,
+        lat: RequestBody?,
+        lon: RequestBody?
+    ): UploadResponse {
+        return UploadResponse(
             error = false,
             message = "test"
         )

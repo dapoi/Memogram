@@ -25,28 +25,4 @@ interface ApiService {
     suspend fun loginUser(
         @Body user: Map<String, String>
     ): LoginResponse
-
-    /**
-     * Get all stories
-     */
-    @GET("stories")
-    suspend fun getFeed(
-        @Header("Authorization") token: String,
-        @Query("page") page: Int? = null,
-        @Query("size") size: Int? = null,
-        @Query("location") location: Int? = null,
-    ): FeedResponse
-
-    /**
-     * Post story
-     */
-    @Multipart
-    @POST("stories")
-    suspend fun postStory(
-        @Header("Authorization") token: String,
-        @Part photo: MultipartBody.Part,
-        @Part("description") description: RequestBody,
-        @Part("lat") lat: RequestBody?,
-        @Part("lon") lon: RequestBody?,
-    ): UploadResponse
 }

@@ -90,9 +90,9 @@ class FeedFragment : Fragment() {
         val token = userPreference.userToken
 
         token.observe(viewLifecycleOwner) { bearer ->
-            viewLifecycleOwner.lifecycleScope.launch {
-                feedViewModel.getFeed(bearer).collectLatest { pagingData ->
-                    feedAdapter.submitData(pagingData)
+            lifecycleScope.launch {
+                feedViewModel.getFeed(bearer).collectLatest {
+                    feedAdapter.submitData(it)
                 }
             }
         }
@@ -104,10 +104,12 @@ class FeedFragment : Fragment() {
                         is LoadState.Loading -> {
                             progressBar.visibility = View.VISIBLE
                             clEmptyState.visibility = View.GONE
+                            rvFeed.visibility = View.GONE
                         }
                         is LoadState.NotLoading -> {
                             progressBar.visibility = View.GONE
                             clEmptyState.visibility = View.GONE
+                            rvFeed.visibility = View.VISIBLE
                         }
                         is LoadState.Error -> {
                             if (feedAdapter.itemCount == 0) {

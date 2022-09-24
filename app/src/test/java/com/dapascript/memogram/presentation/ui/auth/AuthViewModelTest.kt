@@ -2,6 +2,7 @@ package com.dapascript.memogram.presentation.ui.auth
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.dapascript.memogram.data.source.UserRepository
+import com.dapascript.memogram.data.source.UserRepositoryImpl
 import com.dapascript.memogram.utils.CoroutinesTestRule
 import com.dapascript.memogram.utils.DataDummy
 import com.dapascript.memogram.utils.Resource
@@ -26,7 +27,7 @@ class AuthViewModelTest {
     var coroutinesTestRule = CoroutinesTestRule()
 
     @Mock
-    private lateinit var userRepository: UserRepository
+    private lateinit var userRepository: UserRepositoryImpl
     private lateinit var authViewModel: AuthViewModel
 
     private val dummyRegister = DataDummy.dummyRegister()

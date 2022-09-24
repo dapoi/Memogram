@@ -76,13 +76,14 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
+        gMap = googleMap
         userPreference.userToken.observe(viewLifecycleOwner) { token ->
             locationViewModel.getLocation(token).observe(viewLifecycleOwner) { result ->
                 when (result) {
                     is Resource.Loading -> binding.progressBar.visibility = View.VISIBLE
                     is Resource.Success -> {
                         binding.progressBar.visibility = View.GONE
-                        setUpMap(googleMap, result.data!!.listStory)
+                        setUpMap(result.data!!.listStory)
                     }
                     is Resource.Error -> {
                         binding.progressBar.visibility = View.GONE
@@ -93,8 +94,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun setUpMap(googleMap: GoogleMap, listStory: List<ListStoryItem>) {
-        gMap = googleMap
+    private fun setUpMap(listStory: List<ListStoryItem>) {
 
         val latLngBounds = LatLngBounds.Builder()
         getLocation()

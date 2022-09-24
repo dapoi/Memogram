@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import androidx.paging.*
 import androidx.recyclerview.widget.ListUpdateCallback
-import com.dapascript.memogram.data.source.UserRepository
+import com.dapascript.memogram.data.source.StoryRepositoryImpl
 import com.dapascript.memogram.data.source.local.model.FeedEntity
 import com.dapascript.memogram.presentation.adapter.FeedAdapter
 import com.dapascript.memogram.utils.CoroutinesTestRule
@@ -35,7 +35,7 @@ class FeedViewModelTest {
     var coroutinesTestRule = CoroutinesTestRule()
 
     @Mock
-    private lateinit var userRepository: UserRepository
+    private lateinit var storyRepository: StoryRepositoryImpl
 
     private val token = "token"
 
@@ -46,10 +46,10 @@ class FeedViewModelTest {
         val feed = MutableLiveData<PagingData<FeedEntity>>()
         feed.value = dataPaging
 
-        val repository = userRepository.getFeed(token)
+        val repository = storyRepository.getFeed(token)
         `when`(repository).thenReturn(flowOf(feed.value!!))
 
-        val feedViewModel = FeedViewModel(userRepository)
+        val feedViewModel = FeedViewModel(storyRepository)
         val actualFeed = feedViewModel.getFeed(token).asLiveData().getOrAwaitValue()
         val differ = AsyncPagingDataDiffer(
             diffCallback = FeedAdapter.DIFF_UTIL,
@@ -70,10 +70,10 @@ class FeedViewModelTest {
         val feed = MutableLiveData<PagingData<FeedEntity>>()
         feed.value = dataPaging
 
-        val repository = userRepository.getFeed(token)
+        val repository = storyRepository.getFeed(token)
         `when`(repository).thenReturn(flowOf(feed.value!!))
 
-        val feedViewModel = FeedViewModel(userRepository)
+        val feedViewModel = FeedViewModel(storyRepository)
         val actualFeed = feedViewModel.getFeed(token).asLiveData().getOrAwaitValue()
         val differ = AsyncPagingDataDiffer(
             diffCallback = FeedAdapter.DIFF_UTIL,

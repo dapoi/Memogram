@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import com.dapascript.memogram.BuildConfig
 import com.dapascript.memogram.data.preference.UserPreference
+import com.dapascript.memogram.data.source.StoryRepository
+import com.dapascript.memogram.data.source.StoryRepositoryImpl
 import com.dapascript.memogram.data.source.UserRepository
 import com.dapascript.memogram.data.source.UserRepositoryImpl
 import com.dapascript.memogram.data.source.local.db.FeedDatabase
@@ -78,9 +80,14 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideRepository(
+    fun provideUserRepository(
         apiService: ApiService,
+    ): UserRepository = UserRepositoryImpl(apiService)
+
+    @Provides
+    @Singleton
+    fun provideStoryRepository(
         apiPaging: ApiPaging,
-        feedDB: FeedDatabase
-    ): UserRepository = UserRepositoryImpl(apiService, apiPaging, feedDB)
+        database: FeedDatabase
+    ): StoryRepository = StoryRepositoryImpl(apiPaging, database)
 }
