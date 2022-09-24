@@ -3,8 +3,6 @@ package com.dapascript.memogram.data.source
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.asLiveData
 import androidx.paging.ExperimentalPagingApi
-import com.dapascript.memogram.data.source.local.db.FeedDatabase
-import com.dapascript.memogram.data.source.remote.network.ApiPaging
 import com.dapascript.memogram.data.source.remote.network.ApiService
 import com.dapascript.memogram.utils.CoroutinesTestRule
 import com.dapascript.memogram.utils.DataDummy
@@ -54,7 +52,9 @@ class UserRepositoryTest {
         `when`(apiService.loginUser(dataUser)).thenReturn(dataDummy)
 
         userRepository.loginUser(emailDummy, passwordDummy).asLiveData().observeForever {
-            Assert.assertEquals(dataDummy, it.data)
+            Assert.assertNotNull(it)
+            Assert.assertTrue(it is Resource.Success)
+            Assert.assertEquals(Resource.Success(dataDummy), it.data)
         }
     }
 

@@ -1,6 +1,6 @@
 # Unit Test ViewModel
 AuthViewModelTest(Login & Register):
-- Memastikan data response dari API sesuai dengan yang diharapkan
+- Memastikan data response dari API sesuai dengan yang diharapkan (Resource.Success())
 - Memastikan response ketika eror, akan menampilkan pesan error sesuai dengan yang diharapkan
 
 FeedViewModelTest:
@@ -8,13 +8,33 @@ FeedViewModelTest:
 - Memastikan ukuran data response sesuai dengan ukuran data dummy
 
 UploadStoryViewModelTest:
-- Memastikan data yang diupload sesuai dengan data yang diharapkan (data dummy)
+- Memastikan data yang diupload sesuai dengan data yang diharapkan (data dummy) (Resource.Success())
 - Memastikan response ketika eror, akan menampilkan pesan error sesuai dengan yang diharapkan
 
 LocationViewModelTest:
-- Memastikan data response sesuai dengan data dummy
+- Memastikan data response dari API sesuai dengan yang diharapkan (Resource.Success())
+- Memastikan response ketika eror, akan menampilkan pesan error sesuai dengan yang diharapkan
+
+
 
 # Unit Test Repository
-UserRepositoryImplTest:
-- Memastikan seluruh function yang tersedia, menghasilkan data response yang sesuai
-  dengan data dummy
+UserRepositoryImplTest
+Login & Register:
+- Memastikan kembalian data tidak null
+- Memastikan mengembalikan Resource.Success
+- Memastikan data response sesuai dengan data dummy
+
+StoryRepositoryImplTest
+Upload Photo:
+- Memastikan kembalian data tidak null
+- Memastikan mengembalikan Resource.Success
+- Memastikan data response sesuai dengan data dummy
+
+Get Feed:
+- Memastikan kembalian data tidak null
+- Memastikan data response sesuai dengan data dummy
+
+Get Feed Location:
+- Memastikan kembalian data tidak null
+- Memastikan mengembalikan Resource.Success
+- Memastikan data response sesuai dengan data dummy
