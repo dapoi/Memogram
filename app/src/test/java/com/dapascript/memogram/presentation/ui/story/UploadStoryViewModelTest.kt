@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -63,7 +64,9 @@ class UploadStoryViewModelTest {
             latDummy,
             longDummy
         ).observeForever {
-            assert(it.data == uploadResponse)
+            Assert.assertNotNull(it)
+            Assert.assertEquals(Resource.Success(uploadResponse), it)
+            Assert.assertEquals(uploadResponse, it.data)
         }
 
         Mockito.verify(storyRepository).postStory(
@@ -95,7 +98,7 @@ class UploadStoryViewModelTest {
             latDummy,
             longDummy
         ).observeForever {
-            assert(it.message == "Error")
+            Assert.assertEquals(Resource.Error("Error", null), it)
         }
 
         Mockito.verify(storyRepository).postStory(

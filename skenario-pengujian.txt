@@ -1,40 +1,82 @@
 # Unit Test ViewModel
-AuthViewModelTest(Login & Register):
-- Memastikan data response dari API sesuai dengan yang diharapkan (Resource.Success())
-- Memastikan response ketika eror, akan menampilkan pesan error sesuai dengan yang diharapkan
+-AuthViewModelTest:
+    -Registrasi Berhasil
+        - memastikan kembalian data tidak null
+        - memastikan mengembalikan Resource.Success
+        - memastikan kembalian data sama dengan yang diharapkan
+        - mengetahui apakah suatu fungsi sudah terpanggil atau tidak menggunakan fungsi verify
+    -Registrasi Gagal
+        - memastikan mengembalikan Resource.Error dan sesuai dengan pesan error yang diharapkan
+        - mengetahui apakah suatu fungsi sudah terpanggil atau tidak menggunakan fungsi verify
+    -Login Berhasil
+        - memastikan kembalian data tidak null
+        - memastikan mengembalikan Resource.Success
+        - memastikan kembalian data sama dengan yang diharapkan
+        - mengetahui apakah suatu fungsi sudah terpanggil atau tidak menggunakan fungsi verify
+    -Login Gagal
+        - memastikan mengembalikan Resource.Error dan sesuai dengan pesan error yang diharapkan
+        - mengetahui apakah suatu fungsi sudah terpanggil atau tidak menggunakan fungsi verify
 
-FeedViewModelTest:
-- Memastikan data response tidak null
-- Memastikan ukuran data response sesuai dengan ukuran data dummy
 
-UploadStoryViewModelTest:
-- Memastikan data yang diupload sesuai dengan data yang diharapkan (data dummy) (Resource.Success())
-- Memastikan response ketika eror, akan menampilkan pesan error sesuai dengan yang diharapkan
+-FeedViewModelTest:
+    -Get Feed Berhasil
+        - memastikan kembalian data tidak null
+        - memastikan ukuran data sama dengan yang diharapkan
+        - memastikan response data sama dengan yang diharapkan
+    -Get Feed Gagal
+        - memastikan kembalian data tidak null
+        - memastikan ukuran data tidak sama dengan yang diharapkan
+        - memastikan response data tidak sama dengan yang diharapkan
 
-LocationViewModelTest:
-- Memastikan data response dari API sesuai dengan yang diharapkan (Resource.Success())
-- Memastikan response ketika eror, akan menampilkan pesan error sesuai dengan yang diharapkan
+
+
+-UploadStoryViewModelTest:
+    -Upload Story Berhasil
+        - memastikan kembalian data tidak null
+        - memastikan mengembalikan Resource.Success
+        - memastikan kembalian data sama dengan yang diharapkan
+        - mengetahui apakah suatu fungsi sudah terpanggil atau tidak menggunakan fungsi verify
+    -Upload Story Gagal
+        - memastikan mengembalikan Resource.Error dan sesuai dengan pesan error yang diharapkan
+        - mengetahui apakah suatu fungsi sudah terpanggil atau tidak menggunakan fungsi verify
+
+
+
+-LocationViewModelTest:
+    -Get Location Berhasil
+        - memastikan kembalian data tidak null
+        - memastikan mengembalikan Resource.Success
+        - memastikan kembalian data sama dengan yang diharapkan
+        - mengetahui apakah suatu fungsi sudah terpanggil atau tidak menggunakan fungsi verify
+    -Get Location Gagal
+        - memastikan mengembalikan Resource.Error dan sesuai dengan pesan error yang diharapkan
+        - mengetahui apakah suatu fungsi sudah terpanggil atau tidak menggunakan fungsi verify
 
 
 
 # Unit Test Repository
-UserRepositoryImplTest
-Login & Register:
-- Memastikan kembalian data tidak null
-- Memastikan mengembalikan Resource.Success
-- Memastikan data response sesuai dengan data dummy
+-UserRepositoryImplTest
+    -Login Berhasil
+        - Memastikan kembalian data tidak null
+        - Memastikan mengembalikan Resource.Success
+        - Memastikan data response sesuai dengan data dummy
 
-StoryRepositoryImplTest
-Upload Photo:
-- Memastikan kembalian data tidak null
-- Memastikan mengembalikan Resource.Success
-- Memastikan data response sesuai dengan data dummy
+    -Registrasi Berhasil
+        - Memastikan kembalian data tidak null
+        - Memastikan mengembalikan Resource.Success
+        - Memastikan data response sesuai dengan data dummy
 
-Get Feed:
-- Memastikan kembalian data tidak null
-- Memastikan data response sesuai dengan data dummy
+-StoryRepositoryImplTest
+    -Upload Photo:
+        - Memastikan kembalian data tidak null
+        - Memastikan mengembalikan Resource.Success
+        - Memastikan data response sesuai dengan data dummy
 
-Get Feed Location:
-- Memastikan kembalian data tidak null
-- Memastikan mengembalikan Resource.Success
-- Memastikan data response sesuai dengan data dummy
+    -Get Feed:
+        - Memastikan kembalian data tidak null
+        - Memastikan data response sesuai dengan data dummy
+
+    -Get Feed Location:
+        - Memastikan kembalian data tidak null
+        - Memastikan mengembalikan Resource.Success
+        - Memastikan data response sesuai dengan data dummy

@@ -50,7 +50,7 @@ object DataDummy {
         return listStoryItem
     }
 
-    fun dummyLocation(): FeedResponse {
+    fun dummyLocationAndFeed(): FeedResponse {
         val listStoryItem = ArrayList<ListStoryItem>()
         for (i in 1..5) {
             val feed = ListStoryItem(

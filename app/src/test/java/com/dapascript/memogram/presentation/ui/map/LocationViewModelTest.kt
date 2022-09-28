@@ -7,6 +7,7 @@ import com.dapascript.memogram.utils.DataDummy
 import com.dapascript.memogram.utils.Resource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -37,11 +38,13 @@ class LocationViewModelTest {
 
     @Test
     fun `Get User Location`() {
-        val result = flowOf(Resource.Success(DataDummy.dummyLocation()))
+        val result = flowOf(Resource.Success(DataDummy.dummyLocationAndFeed()))
         Mockito.`when`(storyRepository.getFeedLocation(tokenDummy)).thenReturn(result)
 
         locationViewModel.getLocation(tokenDummy).observeForever {
-            assert(it.data == DataDummy.dummyLocation())
+            Assert.assertNotNull(it)
+            Assert.assertEquals(Resource.Success(DataDummy.dummyLocationAndFeed()), it)
+            Assert.assertEquals(it.data, DataDummy.dummyLocationAndFeed())
         }
 
         Mockito.verify(storyRepository).getFeedLocation(tokenDummy)
@@ -53,7 +56,7 @@ class LocationViewModelTest {
         Mockito.`when`(storyRepository.getFeedLocation(tokenDummy)).thenReturn(result)
 
         locationViewModel.getLocation(tokenDummy).observeForever {
-            assert(it.message == "Error")
+            Assert.assertEquals(Resource.Error("Error", null), it)
         }
 
         Mockito.verify(storyRepository).getFeedLocation(tokenDummy)

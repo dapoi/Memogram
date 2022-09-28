@@ -1,7 +1,6 @@
 package com.dapascript.memogram.presentation.ui.auth
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.dapascript.memogram.data.source.UserRepository
 import com.dapascript.memogram.data.source.UserRepositoryImpl
 import com.dapascript.memogram.utils.CoroutinesTestRule
 import com.dapascript.memogram.utils.DataDummy
@@ -9,6 +8,7 @@ import com.dapascript.memogram.utils.Resource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -48,7 +48,9 @@ class AuthViewModelTest {
         ).thenReturn(result)
 
         authViewModel.registerUser("test", "email", "password").observeForever {
-            assert(it.data == dummyRegister)
+            Assert.assertNotNull(it)
+            Assert.assertEquals(Resource.Success(dummyRegister), it)
+            Assert.assertEquals(dummyRegister, it.data)
         }
 
         Mockito.verify(userRepository).registerUser("test", "email", "password")
@@ -64,7 +66,7 @@ class AuthViewModelTest {
         ).thenReturn(result)
 
         authViewModel.registerUser("test", "email", "password").observeForever {
-            assert(it.message == "Error")
+            Assert.assertEquals(Resource.Error("Error", null), it)
         }
 
         Mockito.verify(userRepository).registerUser("test", "email", "password")
@@ -80,7 +82,9 @@ class AuthViewModelTest {
         ).thenReturn(result)
 
         authViewModel.loginUser("email", "password").observeForever {
-            assert(it.data == dummyLogin)
+            Assert.assertNotNull(it)
+            Assert.assertEquals(Resource.Success(dummyLogin), it)
+            Assert.assertEquals(dummyLogin, it.data)
         }
 
         Mockito.verify(userRepository).loginUser("email", "password")
@@ -96,7 +100,7 @@ class AuthViewModelTest {
         ).thenReturn(result)
 
         authViewModel.loginUser("email", "password").observeForever {
-            assert(it.message == "Error")
+            Assert.assertEquals(Resource.Error("Error", null), it)
         }
 
         Mockito.verify(userRepository).loginUser("email", "password")
