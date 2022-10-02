@@ -21,7 +21,7 @@ import org.mockito.junit.MockitoJUnitRunner
 @ExperimentalCoroutinesApi
 @ExperimentalPagingApi
 @RunWith(MockitoJUnitRunner.Silent::class)
-class UserRepositoryTest {
+class UserRepositoryImplTest {
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
 
