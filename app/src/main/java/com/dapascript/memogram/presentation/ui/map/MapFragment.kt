@@ -98,8 +98,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         val latLngBounds = LatLngBounds.Builder()
         getLocation()
         listStory.indices.forEach { loc ->
-            feedLat = listStory[loc].lat!!
-            feedLng = listStory[loc].lon!!
+            listStory[loc].apply {
+                lat?.let { feedLat = it }
+                lon?.let { feedLng = it }
+            }
             try {
                 val latLng = LatLng(feedLat, feedLng)
                 val address = getAddressSnippet(requireContext(), feedLat, feedLng)
@@ -153,34 +155,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-//    private fun requestNewLocationData() {
-//        val locationRequest = LocationRequest.create().apply {
-//            priority = Priority.PRIORITY_HIGH_ACCURACY
-//            interval = 100
-//            fastestInterval = 3000
-//            numUpdates = 1
-//        }
-//        fusedLocation = LocationServices.getFusedLocationProviderClient(requireActivity())
-//        if (ContextCompat.checkSelfPermission(
-//                requireContext().applicationContext,
-//                Manifest.permission.ACCESS_COARSE_LOCATION
-//            ) == PackageManager.PERMISSION_GRANTED
-//        ) {
-//            fusedLocation.requestLocationUpdates(
-//                locationRequest, locationCallback,
-//                Looper.myLooper()
-//            )
-//        }
-//    }
-//
-//    private val locationCallback = object : LocationCallback() {
-//        override fun onLocationResult(result: LocationResult) {
-//            val location = result.lastLocation!!
-//            val latLng = LatLng(location.latitude, location.longitude)
-//            gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8f))
-//        }
-//    }
-
     private fun isLocationEnabled(): Boolean {
         val locationManager =
             requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -188,7 +162,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             LocationManager.NETWORK_PROVIDER
         )
     }
-
 
     override fun onResume() {
         super.onResume()

@@ -1,6 +1,5 @@
 package com.dapascript.memogram.data.source
 
-import androidx.lifecycle.LiveData
 import androidx.paging.PagingData
 import com.dapascript.memogram.data.source.local.model.FeedEntity
 import com.dapascript.memogram.data.source.remote.model.FeedResponse

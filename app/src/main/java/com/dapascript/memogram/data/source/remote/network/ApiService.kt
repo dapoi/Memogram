@@ -1,12 +1,9 @@
 package com.dapascript.memogram.data.source.remote.network
 
-import com.dapascript.memogram.data.source.remote.model.FeedResponse
 import com.dapascript.memogram.data.source.remote.model.LoginResponse
 import com.dapascript.memogram.data.source.remote.model.RegisterResponse
-import com.dapascript.memogram.data.source.remote.model.UploadResponse
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.POST
 
 interface ApiService {
 
